@@ -1,0 +1,48 @@
+/* Styling for the container */
+.signup-coach-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+  }
+  
+  /* Styling for the warning box */
+  .warning-box {
+    display: flex;
+    align-items: center;
+    background-color: #173b61; /* Light yellow warning background */
+    border: 1px solid #ffeeba;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Styling for the warning icon */
+  .warning-icon {
+    margin-right: 10px;
+  }
+  
+  /* Styling for the text */
+  .warning-text {
+    font-size: 18px;
+    font-weight: 500;
+    color: #ffeeba; /* Darker yellow for warning text */
+  }
+  
+  .back-to-login {
+    font-size: 16px;
+    text-align: center;
+    color: #fd8916;
+    font-weight: 500;
+  }
+
+  .back-to-login a {
+    color: #173b61; 
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  .back-to-login a:hover {
+    text-decoration: underline;
+  }

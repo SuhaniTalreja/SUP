@@ -1,0 +1,72 @@
+.upcoming-matches {
+  padding: 20px;
+  text-align: center;
+}
+
+.matches-heading {
+  font-size: 2rem;
+  color: #173B61;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%; /* Adjust to fit your layout */
+  height: 300px; /* Set a fixed height for the carousel */
+}
+
+.carousel-track {
+  display: flex;
+  width: max-content; /* Allow the content to scroll infinitely */
+  animation: scroll 19s linear infinite;
+}
+
+.match-card {
+  flex: 0 0 auto; /* Prevent shrinking or growing */
+  width: 250px; /* Fixed width for cards */
+  height: 300px; /* Match carousel height */
+  margin: 0 10px;
+  background: #7697A0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.match-card img {
+  max-width: 100%;
+  height: 60%;
+  border-bottom: 1px solid #ddd;
+}
+
+.match-card h3 {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+.match-card p {
+  font-size: 14px;
+  color: #555;
+  margin: 0 10px;
+}
+.match-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Keyframes for scrolling */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%); /* Adjust based on content width */
+  }
+}
+
+/* Pause scrolling on hover */
+.carousel-track:hover {
+  animation-play-state: paused;
+}

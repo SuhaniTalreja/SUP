@@ -1,0 +1,89 @@
+  .features-section {
+    padding: 4rem 2rem;
+    color: #173b61; 
+    text-align: center;
+  }
+  .features-heading {
+    font-size: 2rem;
+    color: #173B61;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: #7697a0; /* Accent color for the title */
+  }
+  
+  .feature-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .feature-card {
+    background-color: #17616e; /* Teal blue card background */
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    color: #ffffff; /* White text inside the card */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .feature-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #7697a0; /* Light accent color for icons */
+  }
+  
+  .feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #d9e4ea; /* Softer text color for descriptions */
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 cards per row */
+    gap: 40px; /* Space between cards */
+    margin: 20px auto; /* Center the grid */
+    padding: 20px; /* Padding around the grid */
+    max-width: 1200px; /* Limit the grid's width */
+  }
+  
+  .card {
+    background-color: #17616E;
+    color: white;
+    padding: 30px; /* Internal padding for the card */
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px); /* Add hover effect */
+  }
+  
+  .icon {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .features-grid {
+      grid-template-columns: 1fr; /* Stack cards on smaller screens */
+    }
+  }
+  

@@ -1,0 +1,165 @@
+:root {
+  --primary-color: #FFEBD0;
+  --secondary-color: #7697A0;
+  --accent-color: #FD8916;
+  --text-color: #173b61;
+}
+
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  overflow-x: hidden;
+}
+
+.intro-container {
+  width: 100%;
+  height: 330px;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  overflow-x: hidden;
+}
+
+.home-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: var(--text-color);
+  overflow-x: hidden;
+}
+
+.navbar-placeholder {
+  height: 3rem;
+  background-color: var(--accent-color);
+}
+
+.content-h {
+  width: 100%; /* Ensure it takes full width */
+  max-width: 1200px; /* Prevents excessive stretching on large screens */
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto; /* Centering the content */
+  padding: 0 20px; /* Increase spacing on the sides */
+  padding-left: 0;
+}
+
+.tagline {
+  max-width: 45%; /* Reduce width slightly for more space */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  text-align: left;
+  margin-right: 20px; /* Add spacing between tagline and image */
+}
+
+.tagline h1 {
+  font-size: 3rem;
+  margin-bottom: 0rem;
+  color: var(--text-color);
+  font-family: "Racing Sans One", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.tag {
+  font-size: 1.2rem;
+  margin-top: 0;
+  font-weight: 600;
+  color: var(--secondary-color);
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.desc{
+  margin-top: 2rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--secondary-color);
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.image-section {
+  padding-top: 70px;
+  width: 50%; /* Adjust width for better spacing */
+  height: 100%;
+  display: flex;
+  justify-content: flex-end; /* Align the image to the left */
+  align-items: center;
+}
+
+.image-section img {
+  max-width: 100%;
+  height: auto;
+  transform: translateX(20px); /* Move the image slightly to the right */
+}
+
+/* Media Queries for Responsiveness */
+
+/* For tablets and smaller devices */
+@media (max-width: 768px) {
+  .intro-container {
+      flex-direction: column;
+      height: auto;
+      padding: 10px;
+  }
+
+  .content-h {
+      width: 100%;
+      padding: 10px;
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .tagline {
+      max-width: 100%;
+      margin-bottom: 20px;
+      text-align: center;
+  }
+
+  .tagline h1 {
+      font-size: 2rem;
+  }
+
+  .tagline p {
+      font-size: 1rem;
+  }
+
+  .image-section {
+      width: 100%;
+      padding-top: 20px;
+      justify-content: center;
+  }
+
+  .image-section img {
+      transform: translateX(0);
+      margin: 0 auto;
+  }
+}
+
+/* For mobile devices (max-width: 480px) */
+@media (max-width: 480px) {
+  .home-container {
+      background-size: cover; /* Adjust to ensure the background fills smaller screens */
+  }
+
+  .tagline h1 {
+      font-size: 1.8rem;
+  }
+
+  .tagline p {
+      font-size: 0.9rem;
+  }
+
+  .navbar-placeholder {
+      height: 2.5rem;
+  }
+
+  .image-section img {
+      display: none; /* Remove image on mobile screens */
+  }
+}

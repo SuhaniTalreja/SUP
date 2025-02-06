@@ -1,0 +1,11 @@
+.social-icon {
+    color: #ffebd0;
+    text-decoration: none;
+    font-size: 24px;
+    transition: color 0.3s ease;
+  }
+  
+  .social-icon:hover {
+    color: #173b61;
+  }
+  
