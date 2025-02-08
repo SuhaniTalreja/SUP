@@ -1,5 +1,6 @@
 import mysql2 from 'mysql2/promise';
 import dotenv from 'dotenv';
+import { useNavigate } from 'react-router-dom';
 
 dotenv.config();
 
@@ -13,7 +14,6 @@ const pool = mysql2.createPool({
     queueLimit: 0,
     waitForConnections: true,
 });
-
 
 const checkConnection = async () => {
     try {

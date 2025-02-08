@@ -1,24 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './STYLESHEETS/SignUp.css'; 
 import NavBar from './NavBar';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Validation from './SignUpValidation';
+import axios from 'axios';
 
 function SignUp() {
-    const [formValues,setFormValues] = useState({
-        username:'',
-        email:'',
-        password:''
+    const [values, setValues] = useState({
+        username: '',
+        email: '',
+        password: ''
     });
 
-    const handleInputChange = (e)=>{
-        const {name,value} = e.target;
-        setFormValues({...formValues,[name]:value});
-    }
+    const [errors, setErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
-    const handleSubmit = (e)=>{
+    const handleInputChange = (event) => {
+        setValues((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value
+        }));
+    };
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formValues);
-    }
+        setErrors(Validation(values)); // 🔹 Validate first
+        setIsSubmitting(true); // 🔹 Set flag for submission
+    };
+
+    // 🔥 Run only when errors update
+    useEffect(() => {
+        if (isSubmitting) {
+            if (!errors.username && !errors.email && !errors.password) {  // 🔹 Ensure no validation errors
+                axios.post('http://localhost:3000/sign-up/player', values)
+                    .then(res => {
+                        alert("Successfully created your profile!");
+                        navigate("/login/player");
+                    })
+                    .catch(err => {
+                        alert("Error creating account. Try again!");
+                        console.log(err);
+                    });
+            }
+            setIsSubmitting(false); // Reset submission flag
+        }
+    }, [errors, isSubmitting, navigate, values]);
 
     return (
         <div>
@@ -32,9 +59,10 @@ function SignUp() {
                             type="text"
                             name="username"
                             placeholder="Enter your full name"
-                            value={formValues.username}
+                            value={values.username}
                             onChange={handleInputChange}
                         />
+                        {errors.username && <span className='error-message'>{errors.username}</span>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="email">Email Address</label>
@@ -42,9 +70,10 @@ function SignUp() {
                             type="email"
                             name="email"
                             placeholder="Enter your email"
-                            value={formValues.email}
+                            value={values.email}
                             onChange={handleInputChange}
                         />
+                        {errors.email && <span className='error-message'>{errors.email}</span>}
                     </div>
                     <div className="form-group">
                         <label htmlFor="password">Password</label>
@@ -52,11 +81,12 @@ function SignUp() {
                             type="password"
                             name="password"
                             placeholder="Create a password"
-                            value={formValues.password}
+                            value={values.password}
                             onChange={handleInputChange}
                         />
+                        {errors.password && <span className='error-message'>{errors.password}</span>}
                     </div>
-                    <button type="submit" className="signup-button" >
+                    <button type="submit" className="signup-button">
                         Sign Up
                     </button>
                 </form>

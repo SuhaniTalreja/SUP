@@ -6,12 +6,12 @@ import './STYLESHEETS/UserProfile.css';
 
 function UserProfile() {
   const [userData, setUserData] = useState({
-    userName: "Suhani Talreja",
-    email: "suhani.talreja.29@gmail.com",
+    userName: "",
+    email: "",
     dob: "",
     age: "",
     gender: "",
-    instituteCity: "Manipal University Jaipur",
+    instituteCity: "",
     sports: [],
     level: "",
     linkedinId: "",
