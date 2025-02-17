@@ -1,18 +1,39 @@
 import React, { useState } from 'react';
 import './STYLESHEETS/NavBarCoach.css';
 import Button from '@mui/material/Button';
-import { Link } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 function NavBarCoach() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen); // Toggle the menu state
+    setIsMenuOpen(!isMenuOpen); 
   };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch("http://localhost:3001/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        navigate("/"); 
+      } else {
+        alert("Logout failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Logout Error:", error);
+      alert("An error occurred while logging out.");
+    }
+  };
+
 
   return (
     <div className="navbar">
-      <p className="logo">SUP!</p>
+      <p className="logo">ATHELINK!</p>
 
       
 
@@ -25,11 +46,11 @@ function NavBarCoach() {
 
       <div className={`logins ${isMenuOpen ? 'active' : ''}`}>
         <div className="nav-items">
-          <Link>Profile</Link>
-          <Link>Upcoming Matches</Link>
-          <Link>Create Match</Link>
+          <Link to="/">Home</Link>
+          <Link to="/coach-profile">Profile</Link>
+          <Link to="/update-match">Update Matches</Link>
         </div>
-        <Button variant="contained" className="logout">
+        <Button variant="contained" className="logout" onClick={handleLogout}>
           Logout
         </Button>
       </div>

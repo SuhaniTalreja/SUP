@@ -9,7 +9,7 @@ function Coaches() {
       <NavBarUser />
       <div className="all">
         <p className="heading">Know Your <span> Coaches!</span></p>
-        <p className="desc">
+        <p className="description">
           To provide you with assistance in the sport of your choice, we bring to you the
           finest coaches for your bright future. Let's play and learn together!
         </p>

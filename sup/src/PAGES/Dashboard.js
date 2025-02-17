@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./STYLESHEETS/Dashboard.css";
 import NavBarUser from "./NavBarUser";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 /* global VANTA */
 
 function Dashboard() {
@@ -40,6 +42,23 @@ function Dashboard() {
     };
   }, []);
 
+  axios.defaults.withCredentials = true;
+  const [name,setName] = useState('');
+  const[sport,setSport] =useState('');
+  const navigate=useNavigate();
+  useEffect(() => {
+    axios.get('http://localhost:3001/dashboard')
+      .then(res => {
+        if (res.data.valid) {
+          setName(res.data.username);
+          setSport(res.data.sport);  
+        } else {
+          navigate('/login/player');
+        }
+      })
+      .catch(err => console.log(err));
+  }, [navigate]);  
+
   return (
     <div>
       <NavBarUser />
@@ -51,9 +70,9 @@ function Dashboard() {
 
             <div className="lower-section">
               <p className="heading">
-                Welcome <span>Suhani!</span>
+                Welcome <span>{name}!</span>
                 <br /> How are you feeling this <span>{timeOfDay}?</span>
-                <br /> How was <span>football</span> practice?
+                <br /> How was <span>{sport}</span> practice?
               </p>
             </div>
 
@@ -81,7 +100,7 @@ function Dashboard() {
               <div className="flip-card-back">
                 <p className="title">BACK</p>
                 <div className="button-container">
-                  <button href="#" className="button" style={{ "--clr": "#fd8916" }}>
+                  <button href="/matches" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/matches")}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"
@@ -126,7 +145,7 @@ function Dashboard() {
               <div className="flip-card-back">
                 <p className="title">BACK</p>
                 <div className="button-container">
-                  <button href="#" className="button" style={{ "--clr": "#fd8916" }}>
+                  <button href="#" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/smart-post")}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"
@@ -142,7 +161,7 @@ function Dashboard() {
                       </svg>
                       <svg
                         viewBox="0 0 14 15"
-                        fill="none"
+                        fill="none" 
                         width="10"
                         xmlns="http://www.w3.org/2000/svg"
                         className="button__icon-svg button__icon-svg--copy"
@@ -171,7 +190,7 @@ function Dashboard() {
               <div className="flip-card-back">
                 <p className="title">BACK</p>
                 <div className="button-container">
-                  <button href="#" className="button" style={{ "--clr": "#fd8916" }}>
+                  <button href="/coaches" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/coaches")}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"

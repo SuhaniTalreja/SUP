@@ -1,76 +1,141 @@
-import Footer from '../PAGES/Footer';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Footer from "../PAGES/Footer";
 import styled from "styled-components";
-import NavBarCoach from './NavBarCoach';
+import NavBarCoach from "./NavBarCoach";
+import WinnerSelection from "./WinnerSelection"; 
+import moment from "moment"; // Add moment.js for date formatting
 
 function UpdateMatch() {
-  const cards = Array.from({ length: 6 }, (_, i) => ({
-    title: `Beginner ${i + 1}`,
-    price: "Free",
-    desc: "Etiam ac convallis enim, eget euismod dolor.",
-    features: ["Aenean quis", "Morbi semper", "Tristique enim nec"],
-  }));
+  const [matches, setMatches] = useState([]);
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [players, setPlayers] = useState([]);
+  const [selectedWinners, setSelectedWinners] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
+  useEffect(() => {
+    axios.get("http://localhost:3001/update-match")
+      .then((response) => {
+        setMatches(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching matches:", error);
+      });
+  }, []);
+
+  const fetchPlayers = () => {
+    axios.get("http://localhost:3001/get-players") 
+      .then((response) => {
+        setPlayers(response.data);
+        setShowDropdown(true);
+      })
+      .catch((error) => {
+        console.error("Error fetching players:", error);
+      });
+  };
+
+  const handleDeclareWinners = (matchId) => {
+    setSelectedMatch(matchId);
+    fetchPlayers(matchId);
+  };
+
+  const handleSubmitWinners = () => {
+    console.log("Selected winners before mapping:", selectedWinners);
+
+    if (!selectedMatch || !selectedWinners || selectedWinners.length === 0) {
+        console.error("Invalid match ID or winners list.");
+        return;
+    }
+
+    const winnerIds = selectedWinners
+        .filter(player => player && player.playerId !== undefined)
+        .map(player => player.playerId);
+
+    if (winnerIds.length === 0) {
+        console.error("No valid player IDs selected.");
+        return;
+    }
+
+    const winnersData = { players: winnerIds };
+
+    axios.post(`http://localhost:3001/save-winners/${selectedMatch}`, { winners: winnersData })
+          .then((response) => {
+              console.log("Winners saved successfully:", response.data);
+              setShowDropdown(false);
+              setSelectedWinners([]);
+          })
+          .catch((error) => {
+              console.error("Error saving winners:", error);
+          });
+  };
+
+  const handleCloseRegistration = (matchId) => {
+    axios.post(`http://localhost:3001/close-registration/${matchId}`)
+      .then((response) => {
+        console.log("Registration closed successfully:", response.data);
+        alert(response.data.message);
+        setMatches((prevMatches) =>
+          prevMatches.map((match) =>
+            match.match_id === matchId ? { ...match, is_open: 0 } : match
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error closing registration:", error);
+      });
+  };
+  
   return (
     <StyledPage>
       <div className="home-container">
-        {/* Navbar Section */}
         <NavBarCoach />
-
-        {/* Heading */}
         <h1 className="heading">Update Matches</h1>
-
-        {/* Cards Section */}
         <StyledWrapper>
           <div className="cards-container">
-            {cards.map((card, index) => (
-              <div className="card" key={index}>
+            {matches.map((match, index) => (
+              <div className="card" key={match.id}>
                 <div className="header">
-                  <span className="title">{card.title}</span>
-                  <span className="price">{card.price}</span>
+                  <span className="title">{match.tournament}</span>
+                  <span className="price">{match.sport}</span>
                 </div>
-                <p className="desc">{card.desc}</p>
-                <ul className="lists">
-                  {card.features.map((feature, i) => (
-                    <li className="list" key={i}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button type="button" className="action">
-                  Close the registration
-                </button>
-                <button type="button" className="action">
-                  Declare winners
-                </button>
+                <p className="desc">
+                  <b>Level:</b> {match.level} <br />
+                  <b>Age Group:</b> {match.age_group} <br />
+                  <b>📅 Date:</b> {moment(match.match_date).format("MMMM Do YYYY")}  <br />
+                  <b>⏰ Time:</b> {moment(match.match_time, "HH:mm:ss").format("h:mm A")} <br />
+                  <b>🏟️ Venue:</b> {match.venue}  <br />
+                  <a href={match.registration_link} target="_blank" rel="noopener noreferrer">
+                    Register Here
+                  </a>
+                </p>
+                <button type="button"  className="action"  onClick={() => handleCloseRegistration(match.match_id)}>Close Registration</button>
+                <button type="button" className="action" onClick={() => handleDeclareWinners(match.match_id)}>Declare Winners</button>
               </div>
             ))}
           </div>
-
-          {/* Footer Section */}
-          <Footer />
+  
+          {showDropdown && (
+              <div className="winner-selection-container">
+                <WinnerSelection
+                  selectedOptions={selectedWinners}
+                  onChange={setSelectedWinners}
+                />
+                <button className="submit-btn" onClick={handleSubmitWinners}>
+                  Submit Winners
+                </button>
+              </div>
+            )}
         </StyledWrapper>
       </div>
+      <Footer />
     </StyledPage>
   );
 }
 
 const StyledPage = styled.div`
-  /* Add repeating doodle background */
-  background-image: url("/doodle.jpg"); /* Replace with your correct image path */
-  background-repeat: repeat; /* Repeat the image */
-  background-size: auto; /* Use the original size of the image */
-  background-position: top left; /* Start the repeat from the top left */
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: top left;
   display: flex;
   flex-direction: column;
 `;
@@ -100,14 +165,12 @@ const StyledWrapper = styled.div`
 
   .title {
     font-size: 1.5rem;
-    line-height: 2rem;
     font-weight: 700;
     color: #ffebd0;
   }
 
   .price {
-    font-size: 3.75rem;
-    line-height: 1;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #ffebd0;
   }
@@ -117,26 +180,6 @@ const StyledWrapper = styled.div`
     margin-bottom: 0.75rem;
     line-height: 1.625;
     color: rgba(156, 163, 175, 1);
-  }
-
-  .lists {
-    margin-bottom: 1.5rem;
-    flex: 1 1 0%;
-    color: rgba(156, 163, 175, 1);
-  }
-
-  .lists .list {
-    margin-bottom: 0.5rem;
-    display: flex;
-    margin-left: 0.5rem;
-  }
-
-  .lists .list svg {
-    height: 1.5rem;
-    width: 1.5rem;
-    flex-shrink: 0;
-    margin-right: 0.5rem;
-    color: #fd8916;
   }
 
   .action {
@@ -150,19 +193,10 @@ const StyledWrapper = styled.div`
     font-weight: 600;
     letter-spacing: 0.05em;
     color: #173b61;
-    margin-bottom: 1rem; /* Added space between buttons */
+    margin-bottom: 1rem;
   }
   .action:hover {
     background: #e07712;
-  }
-
-  .navbar {
-    background-color: #173b61;
-    color: #ffffff;
-    padding: 1rem;
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: bold;
   }
 
   .heading {
@@ -174,7 +208,41 @@ const StyledWrapper = styled.div`
     color: #173b61;
   }
 
-  /* Responsive Styles */
+  .winner-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto;
+    width: 300px;
+  }
+
+  .submit-btn {
+    border: none;
+    outline: none;
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: #fd8916;
+    padding: 0.75rem 1.25rem;
+    text-align: center;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #173b61;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .dropdown-container {
+    margin-top: 1rem;
+    background: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    width:300px;
+  }
+
+  .submit-btn:hover {
+    background: #e07712;
+  }
+
   @media (max-width: 768px) {
     .cards-container {
       flex-direction: column;
@@ -192,8 +260,8 @@ const StyledWrapper = styled.div`
       margin: 1rem 0;
     }
 
-    .navbar {
-      font-size: 1.25rem;
+    .winner-selection-container {
+      width: 70%;
     }
   }
 
@@ -208,7 +276,7 @@ const StyledWrapper = styled.div`
     }
 
     .price {
-      font-size: 2.5rem;
+      font-size: 1.25rem;
     }
 
     .action {
@@ -216,8 +284,8 @@ const StyledWrapper = styled.div`
       padding: 0.5rem 1rem;
     }
 
-    .navbar {
-      padding: 0.75rem;
+    .winner-selection-container {
+      width: 90%;
     }
   }
 `;

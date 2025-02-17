@@ -33,9 +33,10 @@ function SignUp() {
     useEffect(() => {
         if (isSubmitting) {
             if (!errors.username && !errors.email && !errors.password) {  // 🔹 Ensure no validation errors
-                axios.post('http://localhost:3000/sign-up/player', values)
+                axios.post('http://localhost:3001/sign-up/player', values)
                     .then(res => {
                         alert("Successfully created your profile!");
+                        localStorage.setItem('playerId', res.data.playerId);
                         navigate("/login/player");
                     })
                     .catch(err => {

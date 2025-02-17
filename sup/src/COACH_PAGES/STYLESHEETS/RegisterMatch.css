@@ -1,155 +1,162 @@
 /* General Layout */
 .register-match-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.register-card {
+  background: #7697a0;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  width: 60%;
+  max-width: 800px;
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Content Layout */
+.content {
+  display: flex;
+  flex-direction: column; /* Align everything in a single column */
+  gap: 20px;
+}
+
+/* Match Details Section */
+.match-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Space between the fields */
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-group input,
+.time-input select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #ffebd0; /* Light peach color */
+}
+.input-group select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #ffebd0; /* Light peach color */
+}
+
+
+/* Time Input Group */
+.time-group .time-input {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.time-input select {
+  width: 60px;
+  cursor: pointer;
+}
+
+/* Upload Poster Section */
+.poster-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.upload-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Ensure vertical alignment */
+  border: 1px solid #aaa;
+  padding: 12px;
+  border-radius: 8px;
+  background: #ffebd0;
+  cursor: pointer;
+  width: 250px; /* Made more rectangular */
+  height: 100px; /* Adjusted height for better rectangular appearance */
+  text-align: center;
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #555;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 24px;
+  margin-bottom: 5px;
+  color: #fd8916;
+}
+
+/* Hide default file input */
+#file-input {
+  display: none;
+}
+
+/* Register Button */
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background: #fd8916;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 20px;
+}
+
+.register-button:hover {
+  background: #e07712;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
   .register-card {
-    background: #7697a0;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    width: 60%;
-    max-width: 800px;
+    padding: 20px; /* Reduce padding on smaller screens */
+    width: 90%; /* Allow it to take more width */
   }
-  
-  /* Title */
-  .title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  /* Content Layout */
-  .content {
-    display: flex;
-    flex-direction: column; /* Align everything in a single column */
-    gap: 20px;
-  }
-  
-  /* Match Details Section */
-  .match-details {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Space between the fields */
-  }
-  
-  .input-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-  }
-  
-  .input-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-  }
-  
+
   .input-group input,
   .time-input select {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    background-color: #ffebd0; /* Light peach color */
+    width: 90%; /* Ensure inputs fill available width on small screens */
   }
-  
-  /* Time Input Group */
-  .time-group .time-input {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .time-input select {
-    width: 60px;
-    cursor: pointer;
-  }
-  
-  /* Upload Poster Section */
-  .poster-upload {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    font-weight: bold;
-  }
-  
+
   .upload-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Ensure vertical alignment */
-    border: 1px solid #aaa;
-    padding: 12px;
-    border-radius: 8px;
-    background: #ffebd0;
-    cursor: pointer;
-    width: 250px; /* Made more rectangular */
-    height: 100px; /* Adjusted height for better rectangular appearance */
-    text-align: center;
+    width: 200px; /* Adjust width for mobile */
+    height: 80px; /* Adjust height for mobile */
   }
-  
-  .upload-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 12px;
-    color: #555;
-    padding: 5px;
-    cursor: pointer;
-  }
-  
-  .upload-icon {
-    font-size: 24px;
-    margin-bottom: 5px;
-    color: #fd8916;
-  }
-  
-  /* Hide default file input */
-  #file-input {
-    display: none;
-  }
-  
-  /* Register Button */
-  .register-button {
-    width: 100%;
-    padding: 12px;
-    background: #fd8916;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 20px;
-  }
-  
-  .register-button:hover {
-    background: #e07712;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .register-card {
-      padding: 20px; /* Reduce padding on smaller screens */
-      width: 90%; /* Allow it to take more width */
-    }
-  
-    .input-group input,
-    .time-input select {
-      width: 90%; /* Ensure inputs fill available width on small screens */
-    }
-  
-    .upload-box {
-      width: 200px; /* Adjust width for mobile */
-      height: 80px; /* Adjust height for mobile */
-    }
-  }
-  
+}

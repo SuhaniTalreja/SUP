@@ -21,37 +21,35 @@ function LoginPage() {
       [event.target.name]: event.target.value
     }));
   };
-
+  axios.defaults.withCredentials=true;
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrors(Validation(values));  // 🔹 Validate first
-    setIsSubmitting(true);  // 🔹 Set flag to track submission
+    setErrors(Validation(values));  
+    setIsSubmitting(true);  
   };
 
-  // 🔥 Run only when errors change
   useEffect(() => {
     if (isSubmitting) {
-      if (!errors.email && !errors.password) {  // 🔹 Ensure errors are empty
-        axios.post('http://localhost:3000/login/player', values)
+      if (!errors.email && !errors.password) {  
+        axios.post('http://localhost:3001/login/player', values)
           .then(res => {
-            if (res.data === "Success") {
-              navigate("/");
+            console.log("Login Response:", res.data); 
+
+            if (res.data.success) {  
+              localStorage.setItem('playerId', res.data.playerId);  // Store playerId
+              navigate("/dashboard");  
             } else {
               alert("No record found");
             }
           })
           .catch(err => {
-            if (err.response) {
-              alert(`Login failed: ${err.response.data.error}`);
-            } else {
-              alert("Login failed due to a network error.");
-            }
-            console.log(err);
+            console.error("Login error:", err);
+            alert("Login failed. Please try again.");
           });
       }
-      setIsSubmitting(false); // Reset submission flag
+      setIsSubmitting(false);
     }
-  }, [errors, isSubmitting, navigate, values]);  // 🔥 Watch for changes
+  }, [errors, isSubmitting, navigate, values]);  
 
   return (
     <div>

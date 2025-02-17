@@ -63,11 +63,11 @@ button:hover {
 
 .text {
     text-align: center;
-    margin-top: 1rem;
+    margin-top: 0;
     color: #173b61;
 }
 
-div a {
+div a { 
     text-align: center;
     display: block;
     color: #fd8916;

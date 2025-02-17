@@ -1,15 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./STYLESHEETS/UpcomingMatches.css";
 
-const matchImage = "/IMAGES/matches.jpg";
+const defaultImage = "/IMAGES/matches.jpg";
 
 const UpcomingMatches = () => {
-  const matches = [
-    { id: 1, image: matchImage, name: "Match 1", description: "Details about Match 1" },
-    { id: 2, image: matchImage, name: "Match 2", description: "Details about Match 2" },
-    { id: 3, image: matchImage, name: "Match 3", description: "Details about Match 3" },
-    { id: 4, image: matchImage, name: "Match 4", description: "Details about Match 4" },
-  ];
+  const [matches, setMatches] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:3001/upcoming-matches")
+      .then((response) => response.json())
+      .then((data) => {
+        setMatches(data);
+      })
+      .catch((error) => console.error("Error fetching matches:", error));
+  }, []);
+
+  // Function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "long", // Example: Monday
+      year: "numeric",
+      month: "long", // Example: February
+      day: "numeric",
+    });
+  };
+
+  // Function to format time
+  const formatTime = (timeString) => {
+    if (!timeString) return "N/A";
+    const [hours, minutes] = timeString.split(":");
+    return new Date(1970, 0, 1, hours, minutes).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true, // 12-hour format (AM/PM)
+    });
+  };
 
   return (
     <div className="upcoming-matches">
@@ -18,17 +44,33 @@ const UpcomingMatches = () => {
         <div className="carousel-track">
           {matches.map((match, index) => (
             <div className="match-card" key={index}>
-              <img src={match.image} alt={match.name} />
-              <h3>{match.name}</h3>
-              <p>{match.description}</p>
+              <img
+                src={match.poster_url || defaultImage}
+                alt={match.tournament}
+                onError={(e) => (e.target.src = defaultImage)}
+              />
+              <h3>{match.tournament}</h3>
+              <p><strong>Sport:</strong> {match.sport}</p>
+              <p><strong>Level:</strong> {match.level}</p>
+              <p><strong>Date:</strong> {formatDate(match.match_date)}</p>
+              <p><strong>Time:</strong> {formatTime(match.match_time)}</p>
+              <p><strong>Venue:</strong> {match.venue}</p>
             </div>
           ))}
           {/* Duplicate for seamless looping */}
           {matches.map((match, index) => (
             <div className="match-card" key={`duplicate-${index}`}>
-              <img src={match.image} alt={match.name} />
-              <h3>{match.name}</h3>
-              <p>{match.description}</p>
+              <img
+                src={match.poster_url || defaultImage}
+                alt={match.tournament}
+                onError={(e) => (e.target.src = defaultImage)}
+              />
+              <h3>{match.tournament}</h3>
+              <p><strong>Sport:</strong> {match.sport}</p>
+              <p><strong>Level:</strong> {match.level}</p>
+              <p><strong>Date:</strong> {formatDate(match.match_date)}</p>
+              <p><strong>Time:</strong> {formatTime(match.match_time)}</p>
+              <p><strong>Venue:</strong> {match.venue}</p>
             </div>
           ))}
         </div>

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./STYLESHEETS/CoachDashboard.css";
 import NavBarCoach from "./NavBarCoach";
+import { useNavigate } from "react-router-dom";
 /* global VANTA */
 
 function CoachDashboard() {
   const [timeOfDay, setTimeOfDay] = useState("afternoon");
+  const [coachName, setCoachName] = useState("");
 
+  const navigate = useNavigate();
   useEffect(() => {
     const currentHour = new Date().getHours();
     if (currentHour < 12) {
@@ -15,6 +18,18 @@ function CoachDashboard() {
     } else {
       setTimeOfDay("evening");
     }
+
+    fetch("http://localhost:3001/get-coach-name", {
+      method: "GET",
+      credentials: "include",  // To send cookies for session identification
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.name) {
+          setCoachName(data.name);  // Set the coach's name in state
+        }
+      })
+      .catch(error => console.error("Error fetching coach name:", error));
 
     // Initialize Vanta.js Waves effect
     const wavesEffect = VANTA.WAVES({
@@ -51,7 +66,7 @@ function CoachDashboard() {
 
             <div className="lower-section">
               <p className="heading">
-                Welcome <span>Mahi!</span>
+                Welcome <span>{coachName}</span>
                 <br /> How are you feeling this <span>{timeOfDay}?</span>
                 <br /> How was <span>football</span> practice?
               </p>
@@ -80,7 +95,7 @@ function CoachDashboard() {
               <div className="flip-card-back">
                 <p className="title">BACK</p>
                 <div className="button-container">
-                  <button href="#" className="button" style={{ "--clr": "#fd8916" }}>
+                  <button onClick={() => navigate('/update-match')} className="button" style={{ "--clr": "#fd8916" }}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"
@@ -125,7 +140,7 @@ function CoachDashboard() {
               <div className="flip-card-back">
                 <p className="title">BACK</p>
                 <div className="button-container">
-                  <button href="#" className="button" style={{ "--clr": "#fd8916" }}>
+                  <button onClick={() => navigate('/register-match')} className="button" style={{ "--clr": "#fd8916" }}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"

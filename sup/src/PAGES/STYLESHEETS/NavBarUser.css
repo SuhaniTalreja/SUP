@@ -30,7 +30,7 @@
   margin: 0 0.5rem;
 }
 
-/* Hamburger Menu - Hide by default on large screens */
+/* Hamburger Menu - Hidden by default on large screens */
 .hamburger-menu {
   display: none;
   cursor: pointer;
@@ -47,41 +47,41 @@
 /* Navbar Items - Responsive Design */
 @media (max-width: 768px) {
   .nav-items {
-      display: none;
+    display: none;
   }
 
   .logins {
-      display: none;
-      flex-direction: column;
-      position: absolute;
-      top: 3rem;
-      right: 0;
-      background-color: #fd8916;
-      padding: 1rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      width: 60%; 
-      z-index: 100; 
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 3rem;
+    right: 0;
+    background-color: #fd8916;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 60%;
+    z-index: 100;
   }
 
   .logins.active {
-      display: flex; 
-      flex-direction: column; 
+    display: flex;
+    flex-direction: column;
   }
 
   .hamburger-menu {
-      display: flex;
-      padding-right: 2rem;
+    display: flex;
+    padding-right: 2rem;
   }
 
   .logo {
-      font-size: 2.3rem;
+    font-size: 2.3rem;
   }
 
   .nav-items {
-      display: flex;
-      flex-direction: column; 
-      align-items: center;
-      gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
   }
 }
 
@@ -90,17 +90,19 @@
   flex-direction: row;
   justify-content: space-around;
   gap: 1.5rem;
-  align-items: flex-start;
-  padding-right: 10rem !important;
   align-items: center;
+  padding-right: 10rem !important;
 }
 
-.nav-items .MuiLink-root {
+/* Styling for react-router-dom <Link> */
+.nav-items a {
   cursor: pointer;
   text-decoration: none;
   color: #ffebd0;
+  font-size: 1rem;
+  transition: color 0.3s ease-in-out;
 }
 
-.nav-items .MuiLink-root:hover {
+.nav-items a:hover {
   color: #ffffff;
 }

@@ -1,29 +1,18 @@
-import mysql2 from 'mysql2/promise';
-import dotenv from 'dotenv';
-import { useNavigate } from 'react-router-dom';
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-dotenv.config();
+async function runAI() {
+    const genAI = new GoogleGenerativeAI("AIzaSyDeskCnC-SB3hAwRjGkkhc7Gi7XQpjpaMI");
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-const pool = mysql2.createPool({
-    host: '10.161.135.5',
-    port: 3306,
-    user: 'root',
-    password: 'suhanimahi',
-    database: 'athelink',
-    connectionLimit: 10,
-    queueLimit: 0,
-    waitForConnections: true,
-});
+    const prompt = "Give caption for a social media post as i just won a badminton chammpionship in my college in about 20 words";
 
-const checkConnection = async () => {
     try {
-        const connection = await pool.getConnection();
-        console.log("✅ DB Connected Successfully!");
-        connection.release();
+        const result = await model.generateContent(prompt);
+        console.log(result.response.text());
     } catch (error) {
-        console.error("❌ DB Connection Failed:", error);
-        throw error;
+        console.error("Error generating AI response:", error);
     }
-};
+}
 
-export { pool, checkConnection };
+// Run the function
+runAI();

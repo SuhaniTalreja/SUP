@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { FaEdit, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect ,useCallback} from "react";
 import NavBarUser from "./NavBarUser";
-import { Button } from "@mui/material";
-import './STYLESHEETS/UserProfile.css';
+import { Button, CircularProgress, Alert } from "@mui/material";
+import axios from "axios";
+import "./STYLESHEETS/UserProfile.css";
 
 function UserProfile() {
   const [userData, setUserData] = useState({
@@ -11,47 +11,94 @@ function UserProfile() {
     dob: "",
     age: "",
     gender: "",
-    instituteCity: "",
-    sports: [],
+    institute: "",
+    sport: "",
     level: "",
-    linkedinId: "",
-    instagramId: "",
-    photo: null,
+    linkedin_url: "",
+    instagram_url: "",
+    photo_url: "",
   });
+
+  const [playerId, setPlayerId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [error, setError] = useState("");
+
   const sportsOptions = ["Football", "Basketball", "Cricket", "Badminton", "Tennis", "Hockey"];
   const levels = ["Beginner", "Intermediate", "Pro"];
+  const getGoogleDriveImageUrl = (driveUrl) => {
+    if (!driveUrl) return ""; // Handle empty URLs
+    const match = driveUrl.match(/(?:file\/d\/|drive\.google\.com\/open\?id=|drive\.google\.com\/file\/d\/|drive\.google\.com\/uc\?id=)([^/?&]+)/);
+    return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : driveUrl;
+  };
+  
+  
+  useEffect(() => {
+    axios.get("http://localhost:3001/dashboard", { withCredentials: true })
+      .then((res) => {
+        if (res.data.valid) {
+          setPlayerId(res.data.playerId);
+          setUserData((prev) => ({
+            ...prev,
+            userName: res.data.username || "Unknown User",
+            email: res.data.email || "No Email",
+          }));
+        }
+      })
+      .catch((err) => setError("Error fetching user session."))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const fetchUserProfile = useCallback(() => {
+    setLoading(true);
+    axios.get("http://localhost:3001/user-profile", { withCredentials: true })
+      .then((res) => {
+        if (res.data) {
+          setUserData((prev) => ({
+            ...prev,
+            ...res.data,
+            userName: prev.userName || res.data.userName, 
+          }));
+        }
+      })
+      .catch(() => setError("Error fetching profile data."))
+      .finally(() => setLoading(false));
+  }, [setLoading, setUserData, setError]);
+
+useEffect(() => {
+  if (playerId) {
+    fetchUserProfile();
+  }
+}, [playerId, fetchUserProfile]);
+
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (name === "dob") {
-      const birthDate = new Date(value);
-      const age = new Date().getFullYear() - birthDate.getFullYear();
-      setUserData((prev) => ({
-        ...prev,
-        age: age > 0 ? age : "",
-      }));
-    }
+    setUserData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleSportsChange = (e) => {
-    const selectedSports = [...e.target.options].filter((o) => o.selected).map((o) => o.value);
-    setUserData((prev) => ({
-      ...prev,
-      sports: selectedSports,
-    }));
+  const formatDateForMySQL = (dateString) => {
+    return new Date(dateString).toISOString().split("T")[0]; // Convert to YYYY-MM-DD
   };
-
-  const handleDeleteSport = (sportToRemove) => {
-    setUserData((prev) => ({
-      ...prev,
-      sports: prev.sports.filter((sport) => sport !== sportToRemove),
-    }));
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setUpdateSuccess(false);
+    setError("");
+  
+    const formattedData = {
+      ...userData,
+      dob: formatDateForMySQL(userData.dob), // Convert before sending
+    };
+  
+    axios
+      .post("http://localhost:3001/update-profile", formattedData, { withCredentials: true })
+      .then(() => {
+        setUpdateSuccess(true);
+      })
+      .catch(() => setError("Failed to update profile."));
   };
+  
 
   return (
     <div>
@@ -59,88 +106,98 @@ function UserProfile() {
       <div className="profile-card">
         <div className="profile-header">
           <img
-            src={userData.photo ? URL.createObjectURL(userData.photo) : "/IMAGES/user.png"}
+            src={userData.photo_url ? getGoogleDriveImageUrl(userData.photo_url) : "/IMAGES/user.png"}
             alt="Profile"
             className="profile-photo"
+            onError={(e) => (e.target.src = "/IMAGES/user.png")} // Fallback if the image fails
           />
           <h2 className="user-name">{userData.userName}</h2>
-          <div className="email-container">
-            <span>{userData.email}</span>
-            <FaEdit className="edit-icon" />
+          <p className="email">{userData.email}</p>
+        </div>
+
+        {loading ? (
+          <div className="loading-container">
+            <CircularProgress />
           </div>
-        </div>
+        ) : (
+          <div className="profile-details">
+            {error && <Alert severity="error">{error}</Alert>}
+            {updateSuccess && <Alert severity="success">Profile updated successfully!</Alert>}
 
-        <div className="profile-details">
-          <form onSubmit={(e) => e.preventDefault()}>
-            <label>Date of Birth:</label>
-            <input type="date" name="dob" value={userData.dob} onChange={handleChange} />
+            <form onSubmit={handleSubmit}>
+              <label>Email:</label>
+              <input type="email" name="email" value={userData.email} disabled />
 
-            <label>Age:</label>
-            <input type="number" value={userData.age} readOnly />
+              <label>Date of Birth:</label>
+              <input type="date" name="dob" value={userData.dob} onChange={handleChange} />
 
-            <label>Gender:</label>
-            <select name="gender" value={userData.gender} onChange={handleChange}>
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
+              <label>Age:</label>
+              <input type="number" name="age" value={userData.age} onChange={handleChange} />
 
-            <label>Institute:</label>
-            <input type="text" name="instituteCity" value={userData.instituteCity} readOnly />
+              <label>Institute City:</label>
+              <input type="text" name="institute" value={userData.institute} onChange={handleChange} />
 
-            <label>Sports:</label>
-            <select name="sports" multiple onChange={handleSportsChange} value={userData.sports}>
-              <option value="">Select Your Sport</option>
-              {sportsOptions.map((sport) => (
-                <option key={sport} value={sport}>
-                  {sport}
-                </option>
-              ))}
-            </select>
+              <label>Gender:</label>
+              <select name="gender" value={userData.gender} onChange={handleChange}>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
 
-            <div className="selected-sports">
-              {userData.sports.map((sport) => (
-                <div key={sport} className="selected-sport">
-                  <span>{sport}</span>
-                  <FaTimes className="delete-icon" onClick={() => handleDeleteSport(sport)} />
-                </div>
-              ))}
-            </div>
+              <label>Sport:</label>
+              <select name="sport" value={userData.sport} onChange={handleChange}>
+                <option value="">Select Sport</option>
+                {sportsOptions.map((sport) => (
+                  <option key={sport} value={sport}>
+                    {sport}
+                  </option>
+                ))}
+              </select>
 
-            <label>Level:</label>
-            <select name="level" value={userData.level} onChange={handleChange}>
-              <option value="">Select Level</option>
-              {levels.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
+              <label>Level:</label>
+              <select name="level" value={userData.level} onChange={handleChange}>
+                <option value="">Select Level</option>
+                {levels.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
 
-            <label>LinkedIn:</label>
-            <input
-              type="text"
-              name="linkedinId"
-              value={userData.linkedinId}
-              onChange={handleChange}
-              placeholder="LinkedIn Profile"
-            />
+              <label>LinkedIn:</label>
+              <input
+                type="text"
+                name="linkedin_url"
+                value={userData.linkedin_url}
+                onChange={handleChange}
+                placeholder="Enter LinkedIn URL"
+              />
 
-            <label>Instagram:</label>
-            <input
-              type="text"
-              name="instagramId"
-              value={userData.instagramId}
-              onChange={handleChange}
-              placeholder="Instagram Handle"
-            />
+              <label>Instagram:</label>
+              <input
+                type="text"
+                name="instagram_url"
+                value={userData.instagram_url}
+                onChange={handleChange}
+                placeholder="Enter Instagram URL"
+              />
 
-            <Button type="submit" variant="contained" className="save">
-              SAVE PROFILE
-            </Button>
-          </form>
-        </div>
+              <label>Profile Photo URL:</label>
+              <input
+                type="text"
+                name="photo_url"
+                value={userData.photo_url}
+                onChange={handleChange}
+                placeholder="Enter image URL"
+              />
+
+              <Button type="submit" variant="contained" className="save" disabled={loading}>
+                {loading ? <CircularProgress size={24} /> : "SAVE PROFILE"}
+              </Button>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

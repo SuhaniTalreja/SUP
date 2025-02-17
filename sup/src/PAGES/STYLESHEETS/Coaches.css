@@ -55,11 +55,12 @@
     color: #fd8916;
   }
 
-  .desc{
+  .description{
     font-size: 1.2rem;
     color: #173b61;
     font-weight: 700;
     text-align: center;
+    padding: 20px;
   }
 
   @media (max-width: 860px) {

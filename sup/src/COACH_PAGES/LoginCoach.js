@@ -1,41 +1,58 @@
-import React, { useState } from 'react';
-import './STYLESHEETS/LoginCoach.css'
+import React, { useState, useEffect } from 'react';
+import './STYLESHEETS/LoginCoach.css';
 import NavBar from '../PAGES/NavBar';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Validation from './LoginValidation';
 
 function LoginCoach() {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [errorMessage, setErrorMessage] = useState(''); 
+  const [values, setValues] = useState({
+    email: '',
+    password: ''
+  });
+
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+
+  const handleInput = (event) => {
+    setValues((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value
+    }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    axios.post('http://localhost:3001/login/coach', { email, password })
-      .then(result => {
-        console.log("Backend response:", result.data); // Debugging log
-        if (result.data && result.data.message === "Success") {
-          console.log("User Type:", result.data.userType);
-          navigate('/coach-profile');
-        } else {
-          setErrorMessage(result.data.message || "Login failed");
-          console.log('Login failed:', result.data.message);
-        }
-      })
-      .catch(err => {
-        console.error("Error during login request:", err);
-        if (err.response) {
-          console.log("Error response:", err.response.data);
-          setErrorMessage(err.response.data.message || "Login failed");
-        } else {
-          setErrorMessage("Login failed due to server error");
-        }
-      });
+    setErrors(Validation(values)); // Validate first
+    setIsSubmitting(true); // Set flag to track submission
   };
-  
 
+  // 🔥 Run only when errors change
+  useEffect(() => {
+    if (isSubmitting) {
+      if (!errors.email && !errors.password) { // Ensure errors are empty
+        axios.post('http://localhost:3001/login/coach', values, { withCredentials: true }) // Update URL to /login/coach
+          .then(res => {
+            if (res.data.status === "Success") {
+              navigate("/coach-profile"); // Redirect on success
+            } else {
+              alert("Invalid login credentials");
+            }
+          })
+          .catch(err => {
+            if (err.response) {
+              alert(`Login failed: ${err.response.data.error}`);
+            } else {
+              alert("Login failed due to a network error.");
+            }
+            console.log(err);
+          });
+      }
+      setIsSubmitting(false); // Reset submission flag
+    }
+  }, [errors, isSubmitting, navigate, values]); // Watch for changes
+  
   return (
     <div>
       <NavBar />
@@ -48,8 +65,10 @@ function LoginCoach() {
               type="email"
               id="email"
               placeholder="Enter your email"
+              value={values.email} // Binding email value correctly
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInput}
+              name="email" // Added the name attribute
             />
           </div>
           <div>
@@ -58,12 +77,15 @@ function LoginCoach() {
               type="password"
               id="password"
               placeholder="Enter your password"
+              value={values.password} // Binding password value correctly
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInput}
+              name="password" // Added the name attribute
             />
           </div>
           <button type="submit" className='login-button'>Login</button>
-          {errorMessage && <div className="error-message">{errorMessage}</div>} 
+          {errors.email && <div className="error-message">{errors.email}</div>} 
+          {errors.password && <div className="error-message">{errors.password}</div>}
         </form>
         
         <div className='links'>
