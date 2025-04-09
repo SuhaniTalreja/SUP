@@ -12,21 +12,29 @@ Backend: Node.js, Express.js
 
 Database: MySql
 
-# Key Features 🔑
-###1. Upcoming Matches 🗓️
-Players can easily view upcoming matches across different sports and tournaments. Get details like match date, time 🕒, venue 📍, and registration links 📝, all in one place!
 
-### 2. Know Your Coach 🧑‍🏫
-Coaches are integral to every player's journey. Our platform allows players to easily access information about their coach 🤝 and stay connected for better guidance and support.
+## 🔑 Key Features
 
-### 3. Smart-Post 📸
-With the Smart-Post feature, players can generate a custom poster 🖼️ and caption 📝 for any match or achievement. Quickly share these on your social media to show off your skills and stay engaged with the community 📱!
+### 🗓️ 1. Upcoming Matches  
+Players can easily view upcoming matches across different sports and tournaments. Access essential details like match **date**, **time**, **venue**, and **registration links**—all in one place.
 
-### 4. Track Player Info and Wins 📊
-Players can keep track of their performance 🏅, including match stats, wins 🏆, and other personal information in a clean, user-friendly dashboard. Stay motivated by seeing your achievements!
+### 🧑‍🏫 2. Know Your Coach  
+Coaches are a vital part of every player's journey. Our platform helps players stay connected by providing easy access to their coach’s profile and contact information.
 
-### 5. For Coaches: Match and Winner Updates 🏅
-Coaches can easily update match details 📝 and declare winners 🥇 for each event. The platform also allows coaches to close registration for matches, ensuring smooth management.
+### 📸 3. Smart-Post  
+Generate custom **posters** and **captions** for your matches or achievements! Share directly on social media to celebrate your progress and engage with your community.
+
+### 📊 4. Track Player Info and Wins  
+Track your **performance stats**, **wins**, and **personal details** in a clean, intuitive dashboard. Great for staying motivated and organized.
+
+### 🏅 5. For Coaches: Match and Winner Updates  
+Coaches can update match information, declare winners, and **close registrations** for better event management—all from one place.
+
+### 🖨️ 6. Automatic Certificate Generator  
+Easily generate and download **certificates** for winners and participants. No extra hassle—just a few clicks to recognize efforts and success.
+
+### 📚 7. Sports Rules Library  
+Get quick access to official **rules and guidelines** for various sports. A useful reference for players, coaches, and organizers alike.
 
 ## Installation Instructions
 
