@@ -12,7 +12,7 @@ const Footer = () => {
         {/* Contact Information */}
         <div style={styles.section}>
           <h4 style={styles.heading}>Contact Us</h4>
-          <p style={styles.text}>Email: support@sportsportal.com</p>
+          <p style={styles.text}>Email: suhani.talreja.29@gmail.com</p>
           <p style={styles.text}>Phone: +91 3234567890</p>
           <p style={styles.text}>Address: MUJ, Jaipur, India</p>
         </div>

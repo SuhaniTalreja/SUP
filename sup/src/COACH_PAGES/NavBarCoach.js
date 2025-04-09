@@ -32,7 +32,7 @@ function NavBarCoach() {
 
 
   return (
-    <div className="navbar">
+    <div className="navbar-coach">
       <p className="logo">ATHELINK!</p>
 
       
@@ -47,7 +47,7 @@ function NavBarCoach() {
       <div className={`logins ${isMenuOpen ? 'active' : ''}`}>
         <div className="nav-items">
           <Link to="/">Home</Link>
-          <Link to="/coach-profile">Profile</Link>
+          <Link to="/coach-profile-info">Profile</Link>
           <Link to="/update-match">Update Matches</Link>
         </div>
         <Button variant="contained" className="logout" onClick={handleLogout}>

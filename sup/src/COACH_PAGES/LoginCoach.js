@@ -58,7 +58,7 @@ function LoginCoach() {
       <NavBar />
       <div className='login-container'>
         <h2>Login As Coach</h2>
-        <form onSubmit={handleSubmit}>
+        <form className='coach-login-form' onSubmit={handleSubmit}>
           <div>
             <label>Login ID</label>
             <input

@@ -1,0 +1,32 @@
+[
+    {
+      "name": "Dr. Rina Poonia",
+      "role": "Associate Professor & HoD",
+      "photo": "/IMAGES/rina_poonia.jpg",
+      "email": "rina.poonia@example.com"
+    },
+    {
+      "name": "Dr. Bindia Rawat",
+      "role": "Assistant Professor (Senior Scale)",
+      "photo": "/IMAGES/bindia_rawat.jpg",
+      "email": "bindia.rawat@example.com"
+    },
+    {
+      "name": "Dr. Deepak Bangari",
+      "role": "Assistant Professor (Senior Scale)",
+      "photo": "/IMAGES/deepak_bangari.jpg",
+      "email": "deepak.bangari@example.com"
+    },
+    {
+      "name": "Mr. Mohit Sharma",
+      "role": "Assistant Professor",
+      "photo": "/IMAGES/mohit_sharma.jpg",
+      "email": "mohit.sharma@example.com"
+    },
+    {
+      "name": "Mr. Sanjeev Sharma",
+      "role": "Sports Officer, NCC Officer",
+      "photo": "/IMAGES/sanjeev_sharma.jpg",
+      "email": "sanjeev.sharma@example.com"
+    }
+]

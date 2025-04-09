@@ -10,7 +10,7 @@ function NavBarUser() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
-
+ 
   // Logout function
   const handleLogout = async () => {
     try {
@@ -32,7 +32,7 @@ function NavBarUser() {
   };
 
   return (
-    <div className="navbar">
+    <div className="custom-navbar">
       <p className="logo">ATHELINK!</p>
 
       {/* Hamburger Menu */}
@@ -42,13 +42,15 @@ function NavBarUser() {
         <div></div>
       </div>
 
-      <div className={`logins ${isMenuOpen ? 'active' : ''}`}>
+      <div className={`user-logins ${isMenuOpen ? 'active' : ''}`}>
         <div className="nav-items">
           <Link to="/dashboard">Home</Link>
           <Link to="/user-profile">Profile</Link>
           <Link to="/matches">Upcoming Matches</Link> 
           <Link to="/smart-post">Rewards</Link>
           <Link to="/coaches">Coach</Link>
+          <Link to="/certificate">Certificates</Link>
+          <Link to="/rules">Rules</Link>
         </div>
         <Button variant="contained" className="logout" onClick={handleLogout}>
           Logout

@@ -1,125 +1,133 @@
-.all{
-    background-image: url("C:/Users/HP/Desktop/SUP/sup/public/IMAGES/background.png") !important;
-    background-size: auto;
-    background-position: center;
-}
-.coaches-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 2rem;
-    padding: 3rem;
-  }
-  
-  .coach-card {
-    background-color: #7697a0;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease;
-  }
-  
-  .coach-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  .coach-photo {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .coach-details {
-    padding: 1.5rem;
-    color: #fff;
-  }
-  
-  .coach-details h3 {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: bold;
-  }
-  
-  .coach-details p {
-    margin: 0.7rem 0;
-    font-size: 1rem;
-  }
-  
-  .heading{
-    margin: 0;
-    padding: 2rem;
-    color: #173b61;
-    font-weight: 800;
-  }
 
-  .span{
-    color: #fd8916;
-  }
 
-  .description{
-    font-size: 1.2rem;
-    color: #173b61;
-    font-weight: 700;
-    text-align: center;
-    padding: 20px;
-  }
-
-  @media (max-width: 860px) {
-    .coaches-container {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
-        gap: 1.5rem;
-    }
-
-    .heading {
-        font-size: 1.8rem;
-    }
-
-    .desc {
-        font-size: 1rem;
-        padding: 1rem;
-    }
+.coaches-container, .authorities-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 2rem;
+  padding: 3rem;
 }
 
-  @media (max-width: 768px) {
-    .coaches-container {
-        grid-template-columns: 1fr; /* 1 column on small screens */
-        gap: 1rem;
-    }
+.coach-card, .authority-card {
+  background-color: #7697a0;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+}
 
-    .coach-details h3 {
-        font-size: 1.5rem;
-    }
+.coach-card:hover, .authority-card:hover {
+  transform: translateY(-5px);
+}
 
-    .coach-details p {
-        font-size: 0.9rem;
-    }
+.coach-photo, .authority-photo {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
 
-    .heading {
-        font-size: 1.5rem;
-    }
+.coach-details, .authority-details {
+  color: #fff;
+}
 
-    .desc {
-        font-size: 0.9rem;
-    }
+.coach-details h3, .authority-details h3 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.coach-details p, .authority-details p {
+  margin: 0.7rem 0;
+  font-size: 1rem;
+}
+
+.heading{
+  margin: 0;
+  padding: 2rem;
+  color: #173b61;
+  font-weight: 800;
+}
+
+.span{
+  color: #fd8916;
+}
+
+.description{
+  font-size: 1.2rem;
+  color: #173b61;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px;
+}
+
+@media (max-width: 860px) {
+  .coaches-container, .authorities-container {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
+      gap: 1.5rem;
+  }
+
+  .heading {
+      font-size: 1.8rem;
+  }
+
+  .desc {
+      font-size: 1rem;
+      padding: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .coaches-container, .authorities-container {
+      grid-template-columns: 1fr; /* 1 column on small screens */
+      gap: 1rem;
+  }
+
+  .coach-details h3, .authority-details h3 {
+      font-size: 1.5rem;
+  }
+
+  .coach-details p, .authority-details p {
+      font-size: 0.9rem;
+  }
+
+  .heading {
+      font-size: 1.5rem;
+  }
+
+  .desc {
+      font-size: 0.9rem;
+  }
 }
 
 @media (max-width: 480px) {
-    .coaches-container {
-        padding: 1rem;
-    }
+  .coaches-container, .authorities-container {
+      padding: 1rem;
+  }
 
-    .coach-card {
-        border-radius: 0.3rem;
-    }
+  .coach-card, .authority-card {
+      border-radius: 0.3rem;
+  }
 
-    .coach-details {
-        padding: 1rem;
-    }
+  .coach-photo, .authority-photo {
+      width: 120px;
+      height: 120px;
+  }
 
-    .heading {
-        font-size: 1.2rem;
-    }
+  .coach-details, .authority-details {
+      padding: 1rem;
+  }
 
-    .desc {
-        font-size: 0.8rem;
-    }
+  .heading {
+      font-size: 1.2rem;
+  }
+
+  .desc {
+      font-size: 0.8rem;
+  }
 }

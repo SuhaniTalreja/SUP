@@ -16,7 +16,7 @@
   width: 100%; /* Adjust to fit your layout */
   height: 350px; /* Set a fixed height for the carousel */
 }
-
+ 
 .carousel-track {
   display: flex;
   width: max-content; /* Allow the content to scroll infinitely */
@@ -24,9 +24,9 @@
 }
 
 .match-card {
-  flex: 0 0 auto; /* Prevent shrinking or growing */
-  width: 250px; /* Fixed width for cards */
-  height: 350px; /* Match carousel height */
+  flex: 0 0 auto; 
+  width: 250px; 
+  height: 380px; 
   margin: 0 10px;
   background: #7697A0;
   border: 1px solid #ddd;

@@ -45,7 +45,7 @@ const WinnerSelection = ({ selectedOptions, onChange }) => {
         </div>
     
         {isOpen && (
-          <div className="dropdown-menu">
+          <div className="dropdown-menu-winner">
             <div className="search-box">
               <input
                 type="text"

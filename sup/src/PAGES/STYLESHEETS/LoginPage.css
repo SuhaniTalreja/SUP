@@ -8,10 +8,10 @@
 }
 
 h2{
-    color:#173b61;
+    color:#173b61 !important;
 }
-
-form {
+ 
+.player-login-form {
     background-color: white;
     padding: 2rem;
     border-radius: 10px;
@@ -21,17 +21,17 @@ form {
     box-sizing: border-box; 
 }
 
-form div {
+.player-login-form div {
     margin-bottom: 1rem;
 }
 
-form label {
+.player-login-form label {
     font-weight: bold;
     margin-bottom: 0.5rem;
     display: block;
 }
 
-form input {
+.player-login-form input {
     width: 100%; 
     padding: 0.8rem;
     margin-top: 0.3rem;
@@ -41,7 +41,7 @@ form input {
     box-sizing: border-box; 
 }
 
-form input:focus {
+.player-login-form input:focus {
     border-color: #fd8916;
     outline: none;
 }
@@ -55,6 +55,7 @@ form input:focus {
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
+    margin-top:10px;
 }
 
 button:hover {
@@ -89,12 +90,12 @@ p a:hover {
 }
 
 @media (max-width: 600px) {
-    form {
+    .player-login-form {
         padding: 1rem;
         max-width: 90%;
     }
 
-    form input {
+    .player-login-form input {
         padding: 0.8rem;
         font-size: 1rem;
     }
@@ -110,17 +111,18 @@ p a:hover {
 }
 
 @media (max-width: 400px) {
-    form {
+    .player-login-form {
         max-width: 95%;
         padding: 0.8rem;
     }
 
-    form input {
+    .player-login-form input {
         font-size: 0.9rem;
     }
 
     .login-button {
         font-size: 0.9rem;
+        margin-top:15px;
     }
 }
 

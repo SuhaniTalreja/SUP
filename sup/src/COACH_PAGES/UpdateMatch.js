@@ -4,7 +4,8 @@ import Footer from "../PAGES/Footer";
 import styled from "styled-components";
 import NavBarCoach from "./NavBarCoach";
 import WinnerSelection from "./WinnerSelection"; 
-import moment from "moment"; // Add moment.js for date formatting
+import moment from "moment"; 
+import Popup from "./SuccessMessage";
 
 function UpdateMatch() {
   const [matches, setMatches] = useState([]);
@@ -12,6 +13,15 @@ function UpdateMatch() {
   const [players, setPlayers] = useState([]);
   const [selectedWinners, setSelectedWinners] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+
+  // Function to show popup for a few seconds
+  const triggerPopup = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 30000); 
+  };
 
   useEffect(() => {
     axios.get("http://localhost:3001/update-match")
@@ -63,9 +73,11 @@ function UpdateMatch() {
               console.log("Winners saved successfully:", response.data);
               setShowDropdown(false);
               setSelectedWinners([]);
+              triggerPopup("Winners updated successfully ✅");
           })
           .catch((error) => {
               console.error("Error saving winners:", error);
+              triggerPopup("Something went wrong ❌");
           });
   };
 
@@ -73,7 +85,7 @@ function UpdateMatch() {
     axios.post(`http://localhost:3001/close-registration/${matchId}`)
       .then((response) => {
         console.log("Registration closed successfully:", response.data);
-        alert(response.data.message);
+        triggerPopup("Registration closed successfully");
         setMatches((prevMatches) =>
           prevMatches.map((match) =>
             match.match_id === matchId ? { ...match, is_open: 0 } : match
@@ -82,6 +94,7 @@ function UpdateMatch() {
       })
       .catch((error) => {
         console.error("Error closing registration:", error);
+        triggerPopup("Something went wrong ❌");
       });
   };
   
@@ -90,6 +103,7 @@ function UpdateMatch() {
       <div className="home-container">
         <NavBarCoach />
         <h1 className="heading">Update Matches</h1>
+        {showPopup && <Popup message={popupMessage} className="popup-message"/>}
         <StyledWrapper>
           <div className="cards-container">
             {matches.map((match, index) => (
@@ -127,6 +141,8 @@ function UpdateMatch() {
             )}
         </StyledWrapper>
       </div>
+      
+
       <Footer />
     </StyledPage>
   );
@@ -147,6 +163,9 @@ const StyledWrapper = styled.div`
     justify-content: center;
     gap: 1.5rem;
     padding: 2rem;
+  }
+  .popup-message{
+    align-items: center !important;
   }
 
   .card {
@@ -180,6 +199,7 @@ const StyledWrapper = styled.div`
     margin-bottom: 0.75rem;
     line-height: 1.625;
     color: rgba(156, 163, 175, 1);
+    text-align:center !important;
   }
 
   .action {

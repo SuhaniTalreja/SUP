@@ -1,6 +1,6 @@
 /* Dashboard Container */
 .all{
-  background-image: url("C:/Users/HP/Desktop/SUP/sup/public/IMAGES/background.png") !important;
+  background-image: url("C:/Users/Vijander tomar/Downloads/SUP/sup/public/IMAGES/background.png") !important;
   background-size: auto;
   background-position: center;
 }
@@ -39,7 +39,9 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 20%; /* Adds space to ensure heading doesn't overlap circle */
+  padding-top: 20%;
+  box-sizing: content-box;
+ /* Adds space to ensure heading doesn't overlap circle */
 }
 
 /* Welcome heading */
@@ -267,7 +269,6 @@ span {
     flex-direction: column;
     gap: 1rem;
   }
-
   .heading {
     font-size: 1.2rem;
   }

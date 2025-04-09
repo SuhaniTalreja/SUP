@@ -10,7 +10,7 @@ function LoginPage() {
     email: '',
     password: ''
   });
-
+ 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ function LoginPage() {
       <NavBar />
       <div className='login-container'>
         <h2>Login As Player</h2>
-        <form onSubmit={handleSubmit}>
+        <form className='player-login-player' onSubmit={handleSubmit}>
           <div>
             <label>Login ID</label>
             <input

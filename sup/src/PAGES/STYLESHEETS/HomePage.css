@@ -259,9 +259,10 @@ body {
   }
 
   .home-buttons{
-    flex-direction: column;
+    flex-direction: row;
     width: 80%;
     align-items: center;
+    margin-left: 30px;
   }
 
   .navbar-placeholder {

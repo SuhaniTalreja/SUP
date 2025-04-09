@@ -14,6 +14,10 @@ import UpdateMatch from './COACH_PAGES/UpdateMatch';
 import Matches from './PAGES/Matches';
 import SmartPost from './PAGES/SmartPost';
 import WinnerSelection from './COACH_PAGES/WinnerSelection';
+import CoachProfile from './COACH_PAGES/CoachProfile';
+import Certificate from './PAGES/Certificate';
+import SportRulesComponent from './PAGES/SportRulesComponent';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
@@ -35,6 +39,9 @@ function App() {
           <Route path='/matches' element={<Matches />}></Route>
           <Route path='/smart-post' element={<SmartPost />}></Route>
           <Route path='/winner-selection' element={<WinnerSelection />}></Route>
+          <Route path='/coach-profile-info' element={<CoachProfile />}></Route>
+          <Route path='/certificate' element={<Certificate />}></Route>
+          <Route path='/rules' element={<SportRulesComponent />}></Route>
         </Routes>
         
       </BrowserRouter>

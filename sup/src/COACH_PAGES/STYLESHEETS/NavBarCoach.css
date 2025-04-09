@@ -1,7 +1,7 @@
-.navbar {
+.navbar-coach {
   margin-top: 0;
   width: 100%;
-  height: 3rem;
+  height: 3.5rem;
   background-color: #fd8916;
   display: flex;
   align-items: center;
@@ -44,7 +44,7 @@
   background-color: #ffebd0;
 }
 
-/* Navbar Items - Responsive Design */
+/* -coach Items - Responsive Design */
 @media (max-width: 768px) {
   .nav-items {
       display: none;
@@ -79,7 +79,7 @@
 
   .nav-items {
       display: flex;
-      flex-direction: column; 
+      flex-direction: column !important; 
       align-items: center;
       gap: 1.5rem;
   }
@@ -89,10 +89,10 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  gap: 1.5rem;
+  gap: 1rem;
   align-items: flex-start;
   padding-right: 10rem !important;
-  align-items: center;
+
 }
 
 .nav-items .MuiLink-root {

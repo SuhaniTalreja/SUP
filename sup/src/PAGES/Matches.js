@@ -7,6 +7,25 @@ import NavBarUser from "./NavBarUser";
 function Matches() {
   const [matches, setMatches] = useState([]);
   const [error, setError] = useState(null); // ✅ Track errors
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "N/A";
+    const date = new Date(dateStr);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "N/A";
+    const [hours, minutes] = timeStr.split(":");
+    const date = new Date(1970, 0, 1, hours, minutes);
+    return date.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
 
   useEffect(() => {
     axios
@@ -36,21 +55,23 @@ function Matches() {
                     </span>
                     <span className="price">{match.age_group}</span>
                   </div>
-                  <p className="desc">
-                    {match.tournament} at {match.venue} <br />
-                    {match.match_date} | {match.match_time}
-                  </p>
                   <ul className="lists">
                     <li className="list">📍 Venue: {match.venue}</li>
-                    <li className="list">📅 Date: {match.match_date}</li>
-                    <li className="list">⏰ Time: {match.match_time}</li>
+                    <li className="list">
+                      📅 Date: {formatDate(match.match_date)}
+                    </li>
+                    <li className="list">
+                      ⏰ Time: {formatTime(match.match_time)}
+                    </li>
                   </ul>
                   <a
                     href={match.registration_link}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <button type="button" className="action">Register</button>
+                    <button type="button" className="action">
+                      Register
+                    </button>
                   </a>
                 </div>
               ))

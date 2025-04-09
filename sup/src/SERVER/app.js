@@ -6,7 +6,6 @@ const MySQLStore = require("express-mysql-session")(session);
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
-
 const app = express();
 
 // 🔹 Enable CORS for Frontend
@@ -23,7 +22,7 @@ app.use(bodyParser.json());
 
 // ✅ Connection Pooling
 const pool = mysql.createPool({
-  host: "10.161.243.47",
+  host: "10.161.59.33",
   port: 3306,
   user: "root",
   password: "suhanimahi",
@@ -309,7 +308,6 @@ app.post("/logout", (req, res) => {
 //COACH LOGIN
 app.post('/login/coach', (req, res) => {
   const { name, email, password } = req.body;
-  console.log("Login Request Received:",name , email, password);
 
   if (!email || !password) {
     return res.status(400).json({ error: "All fields are required" });
@@ -325,7 +323,6 @@ app.post('/login/coach', (req, res) => {
     if(data.length > 0){
       req.session.coachId = data[0].coachId;  
       req.session.name = data[0].name;
-      console.log(req.session.coachId);
       return res.status(200).json({ status: "Success", name: req.session.name });
     } else{
       return res.status(401).json({ status: "Failed", message: "Invalid credentials" });
@@ -399,11 +396,12 @@ app.get('/get-players', (req, res) => {
   });
 });
 
+//match-winners selection
+
 app.post("/save-winners/:matchId", (req, res) => {
   const { winners } = req.body;
   const { matchId } = req.params;
 
-  // Ensure the winners object is in the expected format and contains player IDs
   if (!winners || !Array.isArray(winners.players) || winners.players.length === 0) {
       return res.status(400).json({ error: "Invalid winners list." });
   }
@@ -414,19 +412,53 @@ app.post("/save-winners/:matchId", (req, res) => {
       return res.status(400).json({ error: "No valid player IDs found." });
   }
 
-  // Prepare query for inserting the JSON object
-  const query = "INSERT INTO match_winners (match_id, player_data) VALUES (?, ?)";
-  const values = [matchId, JSON.stringify({ players: sanitizedWinners })];
+  const selectQuery = "SELECT player_data FROM match_winners WHERE match_id = ?";
 
-  // Execute query without async/await
-  pool.query(query, values, (error, results) => {
-      if (error) {
-          console.error("Error saving winners:", error);
+  pool.query(selectQuery, [matchId], (selectError, results) => {
+      if (selectError) {
+          console.error("Error fetching existing winners:", selectError);
           return res.status(500).json({ error: "Internal Server Error" });
       }
-      res.status(200).json({ message: "Winners saved successfully!", affectedRows: results.affectedRows });
+
+      let updatedPlayers = sanitizedWinners;
+
+      if (results.length > 0 && results[0].player_data) {
+          try {
+              // Ensure we parse valid JSON
+              const existingPlayerData = typeof results[0].player_data === "object" 
+                  ? results[0].player_data 
+                  : JSON.parse(results[0].player_data);
+
+              const existingPlayers = Array.isArray(existingPlayerData.players) ? existingPlayerData.players : [];
+              updatedPlayers = [...new Set([...existingPlayers, ...sanitizedWinners])];
+
+          } catch (parseError) {
+              console.error("Error parsing player_data:", parseError);
+              return res.status(500).json({ error: "Corrupt player data in database." });
+          }
+
+          const updateQuery = "UPDATE match_winners SET player_data = ? WHERE match_id = ?";
+          pool.query(updateQuery, [JSON.stringify({ players: updatedPlayers }), matchId], (updateError, updateResults) => {
+              if (updateError) {
+                  console.error("Error updating winners:", updateError);
+                  return res.status(500).json({ error: "Internal Server Error" });
+              }
+              res.status(200).json({ message: "Winners updated successfully!", affectedRows: updateResults.affectedRows });
+          });
+
+      } else {
+          const insertQuery = "INSERT INTO match_winners (match_id, player_data) VALUES (?, ?)";
+          pool.query(insertQuery, [matchId, JSON.stringify({ players: updatedPlayers })], (insertError, insertResults) => {
+              if (insertError) {
+                  console.error("Error inserting winners:", insertError);
+                  return res.status(500).json({ error: "Internal Server Error" });
+              }
+              res.status(200).json({ message: "Winners saved successfully!", affectedRows: insertResults.affectedRows });
+          });
+      }
   });
 });
+
 
 
 //CLOSE REGISTERATION
@@ -445,7 +477,134 @@ app.post("/close-registration/:matchId", (req, res) => {
   });
 });
 
+// 🚀 FETCH COACH INFORMATION (Combining coach_signup and coach_info)
+app.get("/coach-profile-info", (req, res) => {
+  if (!req.session.coachId) {
+    return res.status(401).json({ error: "Unauthorized: Please log in" });
+  }
 
+  const sql = `
+    SELECT cs.email, ci.dob, ci.age, ci.gender, ci.institute, ci.sport, ci.yoe, ci.linkedin_url, ci.photo_url 
+    FROM coach_signup cs
+    LEFT JOIN coach_info ci ON cs.coachId = ci.coachId
+    WHERE cs.coachId = ?
+  `;
+
+  pool.query(sql, [req.session.coachId], (err, data) => {
+    if (err) {
+      console.error("Database Error:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (data.length > 0) {
+      return res.json(data[0]); // Return combined profile data
+    } else {
+      return res.json({}); // Return empty object if no profile data exists
+    }
+  });
+});
+
+// 🚀 UPDATE/INSERT COACH PROFILE INFORMATION
+app.post("/update-coach-profile", (req, res) => {
+  if (!req.session.coachId) {
+    return res.status(401).json({ error: "Unauthorized: Please log in" });
+  }
+
+  const { dob, age, gender, institute, sport, yoe, linkedin_url, photo_url } = req.body;
+  const coachId = req.session.coachId;
+
+  // Check if the profile exists
+  const checkSql = "SELECT coachId FROM coach_info WHERE coachId = ?";
+  pool.query(checkSql, [coachId], (err, data) => {
+    if (err) {
+      console.error("Database Check Error:", err.sqlMessage);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    if (data.length > 0) {
+      // UPDATE existing profile
+      const updateSql = `
+        UPDATE coach_info 
+        SET dob = ?, age = ?, gender = ?, institute = ?, sport = ?, yoe = ?, linkedin_url = ?, photo_url = ?
+        WHERE coachId = ?
+      `;
+
+      pool.query(
+        updateSql,
+        [dob, age, gender, institute, sport, yoe, linkedin_url, photo_url, coachId],
+        (err) => {
+          if (err) {
+            console.error("Update Error:", err.sqlMessage);
+            return res.status(500).json({ error: "Error updating profile" });
+          }
+          return res.json({ success: true, message: "Profile updated successfully" });
+        }
+      );
+    } else {
+      // INSERT new profile
+      const insertSql = `
+        INSERT INTO coach_info 
+        (coachId, dob, age, gender, institute, sport, yoe, linkedin_url, photo_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+
+      pool.query(
+        insertSql,
+        [coachId, dob, age, gender, institute, sport, yoe, linkedin_url, photo_url],
+        (err) => {
+          if (err) {
+            console.error("Insert Error:", err.sqlMessage);
+            return res.status(500).json({ error: "Error inserting profile" });
+          }
+          return res.json({ success: true, message: "Profile created successfully" });
+        }
+      );
+    }
+  });
+});
+
+//certificates
+app.get('/certificate', (req, res) => {
+  // Handle the request and send a response
+  res.json({ message: 'Certificates data' });
+});
+
+//get player name for certificate 
+app.get("/player-info/:playerId", (req, res) => {
+  const playerId = parseInt(req.params.playerId);
+
+  const getNameQuery = "SELECT name FROM player_signup WHERE playerId = ?";
+
+  pool.query(getNameQuery, [playerId], (err, nameResults) => {
+    if (err || nameResults.length === 0) {
+      console.error("Error fetching name:", err);
+      return res.status(500).json({ error: "Error fetching name" });
+    }
+
+    const name = nameResults[0].name;
+    res.status(200).json({ name });
+  });
+});
+
+
+// Route to get matches where the player is part of the players array
+app.get('/matches/:playerId', (req, res) => {
+  const playerId = parseInt(req.params.playerId);
+
+  const query = `
+    SELECT m.match_id, m.tournament, w.player_data
+    FROM match_winners w
+    JOIN matches m ON w.match_id = m.match_id
+  `;
+
+  pool.query(query, [playerId], (err, results) => {
+    if (err) {
+      console.error('Error fetching matches:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+    res.json(results);
+  });
+});
 
 
 // 🚀 Start the Server on port 3001
