@@ -3,6 +3,7 @@ import "./STYLESHEETS/Dashboard.css";
 import NavBarUser from "./NavBarUser";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 /* global VANTA */
 
 function Dashboard() {
@@ -226,6 +227,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

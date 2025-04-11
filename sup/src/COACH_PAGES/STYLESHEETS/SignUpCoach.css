@@ -1,5 +1,4 @@
 /* SignUpCoach.css */
-
 .signup-coach-container {
   max-width: 400px;
   margin: 60px auto;
@@ -53,6 +52,9 @@
   cursor: pointer;
   transition: background 0.3s ease;
   font-size: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .submit-button:hover {
@@ -63,6 +65,14 @@
   text-align: center;
   margin-top: 25px;
   font-size: 14px;
+}
+
+.coach-form{
+  padding: 1.5rem;
+}
+
+.coach-form input{
+  margin-bottom: 10px !important;
 }
 
 .back-to-login a {

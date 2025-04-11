@@ -81,7 +81,7 @@ function LoginCoach() {
               required
               onChange={handleInput}
               name="password" // Added the name attribute
-            />
+            /> 
           </div>
           <button type="submit" className='login-button'>Login</button>
           {errors.email && <div className="error-message">{errors.email}</div>} 

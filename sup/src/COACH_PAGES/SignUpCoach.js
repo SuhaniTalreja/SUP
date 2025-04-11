@@ -28,23 +28,46 @@ function SignUpCoach() {
       [name]: value,
     }));
   };
+  const [loading, setLoading] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:3001/sign-up/coach", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-    const result = await response.json();
-    if (response.ok) {
-      alert("Coach added successfully!");
-    } else {
-      alert(result.error || "Error adding coach");
+    setLoading(true);
+    try {
+      const response = await fetch("http://localhost:3001/sign-up/coach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        alert("Coach added successfully!");
+        setFormData({ name: "", email: "", password: "" });
+      } else {
+        alert(result.error || "Error adding coach");
+      }
+    } catch (error) {
+      alert("Something went wrong. Please try again.");
     }
+    setLoading(false);
   };
+
+  // const handleFormSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const response = await fetch("http://localhost:3001/sign-up/coach", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(formData),
+  //   });
+  //   const result = await response.json();
+  //   if (response.ok) {
+  //     alert("Coach added successfully!");
+  //   } else {
+  //     alert(result.error || "Error adding coach");
+  //   }
+  // };
 
   return (
     <div>
@@ -100,8 +123,8 @@ function SignUpCoach() {
               onChange={handleFormChange}
               required
             />
-            <button type="submit" className="submit-button">
-              Add Coach
+            <button type="submit" className="submit-button" disabled={loading}>
+              {loading ? "Submitting..." : "Add Coach"}
             </button>
           </form>
         )}

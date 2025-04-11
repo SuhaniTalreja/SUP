@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // ✅ Connection Pooling
 const pool = mysql.createPool({
-  host: "10.161.59.33",
+  host: "10.51.204.46",
   port: 3306,
   user: "root",
   password: "suhanimahi",
@@ -57,6 +57,20 @@ pool.getConnection((err, connection) => {
     connection.release();
   }
 });
+
+//authenticator
+
+function isPlayer(req, res, next) {
+  if (req.session && req.session.playerId) return next();
+  return res.status(401).json({ error: "Unauthorized: Player access required" });
+}
+
+function isCoach(req, res, next) {
+  if (req.session && req.session.coachId) return next();
+  return res.status(401).json({ error: "Unauthorized: Coach access required" });
+}
+
+
 
 // PLAYER SIDE
 
@@ -133,7 +147,7 @@ app.post("/login/player", (req, res) => {
 });
 
 // 🚀 DASHBOARD USERNAME & ID CHECK
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard", isPlayer,(req, res) => {
   if (req.session.playerId) {
     const playerId = req.session.playerId;
     const query = "SELECT sport FROM player_info WHERE playerId = ?";
@@ -162,7 +176,7 @@ app.get("/dashboard", (req, res) => {
 
 
 // 🚀 FETCH PLAYER INFORMATION (Combining player_signup and player_info)
-app.get("/user-profile", (req, res) => {
+app.get("/user-profile",isPlayer, (req, res) => {
   if (!req.session.playerId) {
     return res.status(401).json({ error: "Unauthorized: Please log in" });
   }
@@ -189,7 +203,7 @@ app.get("/user-profile", (req, res) => {
 });
 
 // 🚀 UPDATE/INSERT PLAYER PROFILE INFORMATION
-app.post("/update-profile", (req, res) => {
+app.post("/update-profile",isPlayer, (req, res) => {
   if (!req.session.playerId) {
     return res.status(401).json({ error: "Unauthorized: Please log in" });
   }
@@ -249,7 +263,7 @@ app.post("/update-profile", (req, res) => {
 });
 
 // 🚀 MATCHES
-app.get("/matches", (req, res) => {
+app.get("/matches",isPlayer, (req, res) => {
   pool.query("SELECT * FROM matches WHERE is_open = 1", (err, results) => {
     if (err) {
       console.error("Error fetching matches:", err);
@@ -296,42 +310,85 @@ app.post("/logout", (req, res) => {
       console.error("Logout Error:", err);
       return res.status(500).json({ success: false, message: "Logout failed" });
     }
+    res.clearCookie("connect.sid");
     return res.json({ success: true, message: "Logged out successfully" });
-    res.clearCookie("connect.sid"); // Clear session cookie
+     // Clear session cookie
   });
 });
 
 
 // COACH SIDE
 
+//coach-signup
+app.post("/sign-up/coach",async (req, res) => {
+  console.log("Received:", req.body);
+  const { name, email, password } = req.body;
+  
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const sql =
+      "INSERT INTO coach_signup (name, email, password) VALUES (?, ?, ?)";
+    pool.query(sql, [name, email, hashedPassword], (err, result) => {
+      if (err) {
+        console.error("Database Error:", err);
+        return res.status(500).json({ error: "Database error" });
+      }
+      return res
+        .status(201)
+        .json({ message: "Coach registered successfully" });
+    });
+  } catch (error) {
+    console.error("Hashing Error:", error);
+    return res.status(500).json({ error: "Error hashing password" });
+  }
+});
 
 //COACH LOGIN
+
 app.post('/login/coach', (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
-  const sql = "SELECT * FROM coach_signup WHERE email=? AND password=?";
+  const sql = "SELECT * FROM coach_signup WHERE email=?";
 
-  pool.query(sql, [req.body.email,req.body.password], (err, data) => {
+  pool.query(sql, [email], async (err, data) => {
     if (err) {
-      console.error(err);
+      console.error("Database error:", err);
       return res.status(500).json({ error: "Database error" });
     }
-    if(data.length > 0){
-      req.session.coachId = data[0].coachId;  
-      req.session.name = data[0].name;
-      return res.status(200).json({ status: "Success", name: req.session.name });
-    } else{
+
+    if (data.length === 0) {
       return res.status(401).json({ status: "Failed", message: "Invalid credentials" });
+    }
+
+    const user = data[0];
+
+    try {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        req.session.coachId = user.coachId;
+        req.session.name = user.name;
+        return res.status(200).json({ status: "Success", name: req.session.name });
+      } else {
+        return res.status(401).json({ status: "Failed", message: "Invalid credentials" });
+      }
+    } catch (compareError) {
+      console.error("Bcrypt compare error:", compareError);
+      return res.status(500).json({ error: "Authentication error" });
     }
   });
 });
 
+
 // GET COACH NAME
-app.get('/get-coach-name', (req, res) => {
+app.get('/get-coach-name',isCoach, (req, res) => {
   if (req.session.name) {
     return res.json({ name: req.session.name });
   } else {
@@ -372,7 +429,7 @@ app.post("/register-match", (req, res) => {
 });
 
 // FETCH ALL MATCHES
-app.get("/update-match", (req, res) => {
+app.get("/update-match",isCoach, (req, res) => {
   const sql = "SELECT * FROM matches";
   pool.query(sql, (err, result) => {
     if (err) {
@@ -478,7 +535,7 @@ app.post("/close-registration/:matchId", (req, res) => {
 });
 
 // 🚀 FETCH COACH INFORMATION (Combining coach_signup and coach_info)
-app.get("/coach-profile-info", (req, res) => {
+app.get("/coach-profile-info",isCoach, (req, res) => {
   if (!req.session.coachId) {
     return res.status(401).json({ error: "Unauthorized: Please log in" });
   }
@@ -505,7 +562,7 @@ app.get("/coach-profile-info", (req, res) => {
 });
 
 // 🚀 UPDATE/INSERT COACH PROFILE INFORMATION
-app.post("/update-coach-profile", (req, res) => {
+app.post("/update-coach-profile",isCoach, (req, res) => {
   if (!req.session.coachId) {
     return res.status(401).json({ error: "Unauthorized: Please log in" });
   }
@@ -564,7 +621,7 @@ app.post("/update-coach-profile", (req, res) => {
 });
 
 //certificates
-app.get('/certificate', (req, res) => {
+app.get('/certificate',isCoach, (req, res) => {
   // Handle the request and send a response
   res.json({ message: 'Certificates data' });
 });

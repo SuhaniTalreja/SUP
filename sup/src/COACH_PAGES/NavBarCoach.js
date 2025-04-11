@@ -49,6 +49,7 @@ function NavBarCoach() {
           <Link to="/">Home</Link>
           <Link to="/coach-profile-info">Profile</Link>
           <Link to="/update-match">Update Matches</Link>
+          <Link to="/register-match">New Match</Link>
         </div>
         <Button variant="contained" className="logout" onClick={handleLogout}>
           Logout

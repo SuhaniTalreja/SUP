@@ -37,7 +37,7 @@ const StyledWrapper = styled.div`
     align-items: center !important;
     justify-content: space-around;
     gap: 15px;
-    margin-left: 450px;
+    margin-left: 34rem;
   }
   .wave {
     position: absolute;

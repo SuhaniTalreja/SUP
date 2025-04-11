@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./STYLESHEETS/CoachDashboard.css";
 import NavBarCoach from "./NavBarCoach";
 import { useNavigate } from "react-router-dom";
+import Footer from "../PAGES/Footer";
 /* global VANTA */
 
 function CoachDashboard() {
@@ -176,6 +177,7 @@ function CoachDashboard() {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

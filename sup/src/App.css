@@ -1,9 +1,9 @@
 .App {
-  background-image: url("C:/Users/Vijander tomar/Downloads/SUP/sup/public/IMAGES/background.png") !important;
+  background-image: url("./background.png");
   background-size: auto;
   background-position: center;
   height: 100%;
   width: 100%;
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
 }
 
