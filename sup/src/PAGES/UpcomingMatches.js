@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./STYLESHEETS/UpcomingMatches.css";
 
-const defaultImage = "/IMAGES/matches.jpg";
+const defaultImage = "/IMAGES/upcoming_match.jpeg";
 
 const UpcomingMatches = () => {
   const [matches, setMatches] = useState([]);
