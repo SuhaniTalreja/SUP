@@ -46,7 +46,7 @@ function NavBarCoach() {
 
       <div className={`logins ${isMenuOpen ? 'active' : ''}`}>
         <div className="nav-items">
-          <Link to="/">Home</Link>
+          <Link to="/coach-dashboard">Home</Link>
           <Link to="/coach-profile-info">Profile</Link>
           <Link to="/update-match">Update Matches</Link>
           <Link to="/register-match">New Match</Link>

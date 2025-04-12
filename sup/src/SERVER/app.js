@@ -516,6 +516,37 @@ app.post("/save-winners/:matchId", (req, res) => {
   });
 });
 
+//get winners names
+app.get("/get-all-winners", (req, res) => {
+  const query = "SELECT match_id, player_data FROM match_winners";
+  
+  pool.query(query, (error, results) => {
+    if (error) {
+      console.error("Error fetching winners:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    const parsedResults = results.map((entry) => {
+      let parsedData = { players: [] };
+
+      try {
+        // Some DB drivers return objects already parsed, others return strings
+        parsedData = typeof entry.player_data === "string"
+          ? JSON.parse(entry.player_data)
+          : entry.player_data;
+      } catch (err) {
+        console.error(`Error parsing player_data for match ${entry.match_id}:`, err);
+      }
+
+      return {
+        match_id: entry.match_id,
+        player_data: parsedData
+      };
+    });
+
+    res.status(200).json(parsedResults);
+  });
+});
 
 
 //CLOSE REGISTERATION

@@ -15,6 +15,8 @@ function UpdateMatch() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const [submittedMatches, setSubmittedMatches] = useState({}); // matchId: winners
+  const [viewingWinners, setViewingWinners] = useState(false);
 
   // Function to show popup for a few seconds
   const triggerPopup = (message) => {
@@ -33,6 +35,51 @@ function UpdateMatch() {
       });
   }, []);
 
+  useEffect(() => {
+    // Step 1: Load players first
+    axios.get("http://localhost:3001/get-players")
+      .then((response) => {
+        setPlayers(response.data);
+  
+        // Step 2: Once players are available, load winners
+        axios.get("http://localhost:3001/get-all-winners")
+          .then((winnerResponse) => {
+            const winnersByMatch = {};
+            winnerResponse.data.forEach((entry) => {
+              let parsedData = entry.player_data;
+  
+              if (typeof parsedData === "string") {
+                try {
+                  parsedData = JSON.parse(parsedData);
+                } catch (error) {
+                  console.error(`Invalid JSON for match_id ${entry.match_id}:`, error);
+                  return;
+                }
+              }
+  
+              const playerIds = Array.isArray(parsedData)
+                ? parsedData
+                : parsedData.players || [];
+  
+              // ✅ Now players are available, this will work
+              const fullPlayers = playerIds.map((id) =>
+                response.data.find((p) => p.playerId === id) || { playerId: id, name: "Unknown" }
+              );
+  
+              winnersByMatch[entry.match_id] = fullPlayers;
+            });
+  
+            setSubmittedMatches(winnersByMatch);
+          })
+          .catch((error) => {
+            console.error("Error fetching submitted winners:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error fetching players:", error);
+      });
+  }, []);
+  
   const fetchPlayers = () => {
     axios.get("http://localhost:3001/get-players") 
       .then((response) => {
@@ -49,38 +96,109 @@ function UpdateMatch() {
     fetchPlayers(matchId);
   };
 
-  const handleSubmitWinners = () => {
-    console.log("Selected winners before mapping:", selectedWinners);
+  // const handleSubmitWinners = () => {
+  //   console.log("Selected winners before mapping:", selectedWinners);
 
-    if (!selectedMatch || !selectedWinners || selectedWinners.length === 0) {
-        console.error("Invalid match ID or winners list.");
-        return;
-    }
+  //   if (!selectedMatch || !selectedWinners || selectedWinners.length === 0) {
+  //       console.error("Invalid match ID or winners list.");
+  //       return;
+  //   }
 
-    const winnerIds = selectedWinners
-        .filter(player => player && player.playerId !== undefined)
-        .map(player => player.playerId);
+  //   const winnerIds = selectedWinners
+  //       .filter(player => player && player.playerId !== undefined)
+  //       .map(player => player.playerId);
 
-    if (winnerIds.length === 0) {
-        console.error("No valid player IDs selected.");
-        return;
-    }
+  //   if (winnerIds.length === 0) {
+  //       console.error("No valid player IDs selected.");
+  //       return;
+  //   }
 
-    const winnersData = { players: winnerIds };
+  //   const winnersData = { players: winnerIds };
 
-    axios.post(`http://localhost:3001/save-winners/${selectedMatch}`, { winners: winnersData })
-          .then((response) => {
-              console.log("Winners saved successfully:", response.data);
-              setShowDropdown(false);
-              setSelectedWinners([]);
-              triggerPopup("Winners updated successfully ✅");
-          })
-          .catch((error) => {
-              console.error("Error saving winners:", error);
-              triggerPopup("Something went wrong ❌");
-          });
-  };
+  //   axios.post(`http://localhost:3001/save-winners/${selectedMatch}`, { winners: winnersData })
+  //         .then((response) => {
+  //             console.log("Winners saved successfully:", response.data);
+  //             setShowDropdown(false);
+  //             setSelectedWinners([]);
+  //             triggerPopup("Winners updated successfully ✅");
+  //         })
+  //         .catch((error) => {
+  //             console.error("Error saving winners:", error);
+  //             triggerPopup("Something went wrong ❌");
+  //         });
+  // };
+  // Update handleSubmitWinners
 
+// const handleSubmitWinners = () => {
+//   if (!selectedMatch || !selectedWinners || selectedWinners.length === 0) {
+//     console.error("Invalid match ID or winners list.");
+//     return;
+//   }
+
+//   const winnerIds = selectedWinners
+//     .filter(player => player && player.playerId !== undefined)
+//     .map(player => player.playerId);
+
+//   if (winnerIds.length === 0) {
+//     console.error("No valid player IDs selected.");
+//     return;
+//   }
+
+//   const winnersData = { players: winnerIds };
+
+//   axios.post(`http://localhost:3001/save-winners/${selectedMatch}`, { winners: winnersData })
+//     .then((response) => {
+//       console.log("Winners saved successfully:", response.data);
+//       setShowDropdown(false);
+//       setSubmittedMatches(prev => ({ ...prev, [selectedMatch]: selectedWinners }));
+//       setSelectedWinners([]);
+//       triggerPopup("Winners updated successfully ✅");
+//     })
+//     .catch((error) => {
+//       console.error("Error saving winners:", error);
+//       triggerPopup("Something went wrong ❌");
+//     });
+// };
+
+const handleSubmitWinners = () => {
+  if (!selectedMatch || !selectedWinners || selectedWinners.length === 0) {
+    console.error("Invalid match ID or winners list.");
+    return;
+  }
+
+  const winnerIds = selectedWinners
+    .filter(player => player && player.playerId !== undefined)
+    .map(player => player.playerId);
+
+  if (winnerIds.length === 0) {
+    console.error("No valid player IDs selected.");
+    return;
+  }
+
+  const winnersData = { players: winnerIds };
+
+  axios.post(`http://localhost:3001/save-winners/${selectedMatch}`, { winners: winnersData })
+    .then((response) => {
+      console.log("Winners saved successfully:", response.data);
+      setShowDropdown(false);
+      setSubmittedMatches(prev => ({
+        ...prev,
+        [selectedMatch]: selectedWinners // Store full player objects for display
+      }));
+      setSelectedWinners([]);
+      triggerPopup("Winners updated successfully ✅");
+    })
+    .catch((error) => {
+      console.error("Error saving winners:", error);
+      triggerPopup("Something went wrong ❌");
+    });
+};
+
+
+const handleShowWinners = (matchId) => {
+  setSelectedMatch(matchId);
+  setViewingWinners(true);
+};
   const handleCloseRegistration = (matchId) => {
     axios.post(`http://localhost:3001/close-registration/${matchId}`)
       .then((response) => {
@@ -122,13 +240,46 @@ function UpdateMatch() {
                     Register Here
                   </a>
                 </p>
-                <button type="button"  className="action"  onClick={() => handleCloseRegistration(match.match_id)}>Close Registration</button>
-                <button type="button" className="action" onClick={() => handleDeclareWinners(match.match_id)}>Declare Winners</button>
+                {/* <button type="button"  className="action"  onClick={() => handleCloseRegistration(match.match_id)}>Close Registration</button>
+                <button type="button" className="action" onClick={() => handleDeclareWinners(match.match_id)}>Declare Winners</button> */}
+                {/* <button type="button" className="action" onClick={() => handleCloseRegistration(match.match_id)}>
+                  Close Registration
+                </button> */}
+                <button
+                    type="button"
+                    className={`action ${match.is_open === 0 ? "closed" : ""}`}
+                    onClick={() => handleCloseRegistration(match.match_id)}
+                    disabled={match.is_open === 0}
+                  >
+                    {match.is_open === 0 ? "Closed" : "Close Registration"}
+                  </button>
+
+
+                {submittedMatches[match.match_id] ? (
+                  <button type="button" className="action" onClick={() => handleShowWinners(match.match_id)}>
+                    Show Winners
+                  </button>
+                ) : (
+                  <button type="button" className="action" onClick={() => handleDeclareWinners(match.match_id)}>
+                    Declare Winners
+                  </button>
+                )}
               </div>
             ))}
           </div>
   
-          {showDropdown && (
+          {/* {showDropdown && (
+              <div className="winner-selection-container">
+                <WinnerSelection
+                  selectedOptions={selectedWinners}
+                  onChange={setSelectedWinners}
+                />
+                <button className="submit-btn" onClick={handleSubmitWinners}>
+                  Submit Winners
+                </button>
+              </div>
+            )} */}
+            {showDropdown && selectedMatch && !submittedMatches[selectedMatch] && (
               <div className="winner-selection-container">
                 <WinnerSelection
                   selectedOptions={selectedWinners}
@@ -139,6 +290,17 @@ function UpdateMatch() {
                 </button>
               </div>
             )}
+            {submittedMatches[selectedMatch] && viewingWinners && (
+              <div className="winner-showcase-container">
+                <h3>Selected Winners for {matches.find(match => match.match_id === selectedMatch)?.tournament}</h3>
+                <ul>
+                  {submittedMatches[selectedMatch].map((winner) => (
+                    <li key={winner.playerId}>{winner.name}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
         </StyledWrapper>
       </div>
       
@@ -219,6 +381,14 @@ const StyledWrapper = styled.div`
     background: #e07712;
   }
 
+  .action.closed {
+    background-color: red;
+    cursor: not-allowed;
+  }
+  .action.closed:hover {
+    background: red !important;
+  }
+
   .heading {
     display: flex;
     justify-content: center; 
@@ -234,6 +404,24 @@ const StyledWrapper = styled.div`
     align-items: center;
     margin: 2rem auto;
     width: 300px;
+  }
+  .winner-showcase-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto;
+    width: 300px;
+    background: linear-gradient(to bottom right, #6a9fb5, #94b9c7);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    color:white;
+  }
+
+  .winner-showcase-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   }
 
   .submit-btn {
