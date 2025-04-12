@@ -22,9 +22,10 @@ const SportRulesComponent = () => {
     slideIntervalRef.current = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
     }, 2500);
-
+  
     return () => clearInterval(slideIntervalRef.current);
-  }, []);
+  }, [carouselImages.length]);
+  
 
   const fetchSportRules = async () => {
     if (!sportName.trim()) return;

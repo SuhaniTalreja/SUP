@@ -26,7 +26,7 @@ function UserProfile() {
   const [error, setError] = useState("");
 
   const sportsOptions = ["Football", "Basketball", "Cricket", "Badminton", "Tennis", "Hockey"];
-  const levels = ["Beginner", "Intermediate", "Advanced"];
+  const levels = ["Beginner", "Intermediate", "Advance"];
   const getGoogleDriveImageUrl = (driveUrl) => {
     if (!driveUrl) return ""; // Handle empty URLs
     const match = driveUrl.match(/(?:file\/d\/|drive\.google\.com\/open\?id=|drive\.google\.com\/file\/d\/|drive\.google\.com\/uc\?id=)([^/?&]+)/);

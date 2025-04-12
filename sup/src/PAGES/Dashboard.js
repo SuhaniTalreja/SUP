@@ -95,11 +95,11 @@ function Dashboard() {
           <div className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <p className="title">Upcoming Matches</p>
+                <p className="dash-title">Upcoming Matches</p>
                 <p>Hover Me</p>
               </div>
               <div className="flip-card-back">
-                <p className="title">BACK</p>
+                <p className="dash-title">BACK</p>
                 <div className="button-container">
                   <button href="/matches" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/matches")}>
                     <span className="button__icon-wrapper">
@@ -140,13 +140,13 @@ function Dashboard() {
           <div className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <p className="title">Rewards</p>
+                <p className="dash-title">Your Certificates</p>
                 <p>Hover Me</p>
               </div>
               <div className="flip-card-back">
-                <p className="title">BACK</p>
+                <p className="dash-title">BACK</p>
                 <div className="button-container">
-                  <button href="#" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/smart-post")}>
+                  <button href="#" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/certificate")}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"
@@ -185,13 +185,13 @@ function Dashboard() {
           <div className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <p className="title">Coaches</p>
+                <p className="dash-title">Smart Post</p>
                 <p>Hover Me</p>
               </div>
               <div className="flip-card-back">
-                <p className="title">BACK</p>
+                <p className="dash-title">BACK</p>
                 <div className="button-container">
-                  <button href="/coaches" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/coaches")}>
+                  <button href="/coaches" className="button" style={{ "--clr": "#fd8916" }} onClick={() => navigate("/smart-post")}>
                     <span className="button__icon-wrapper">
                       <svg
                         viewBox="0 0 14 15"

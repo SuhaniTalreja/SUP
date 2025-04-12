@@ -90,11 +90,11 @@ function CoachDashboard() {
           <div className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <p className="title">Update Previous Matches</p>
+                <p className="dash-title">Update Previous Matches</p>
                 <p>Hover Me</p>
               </div>
               <div className="flip-card-back">
-                <p className="title">BACK</p>
+                <p className="dash-title">BACK</p>
                 <div className="button-container">
                   <button onClick={() => navigate('/update-match')} className="button" style={{ "--clr": "#fd8916" }}>
                     <span className="button__icon-wrapper">
@@ -135,11 +135,11 @@ function CoachDashboard() {
           <div className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <p className="title">Register New Match</p>
+                <p className="dash-title">Register New Match</p>
                 <p>Hover Me</p>
               </div>
               <div className="flip-card-back">
-                <p className="title">BACK</p>
+                <p className="dash-title">BACK</p>
                 <div className="button-container">
                   <button onClick={() => navigate('/register-match')} className="button" style={{ "--clr": "#fd8916" }}>
                     <span className="button__icon-wrapper">
