@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import Validation from './LoginValidation';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Footer from './Footer';
 
 function LoginPage() {
   const [values, setValues] = useState({
@@ -91,6 +92,7 @@ function LoginPage() {
           <p>Don't have an account? <a href="/sign-up/player">Sign Up</a></p>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

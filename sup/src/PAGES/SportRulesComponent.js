@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "../PAGES/STYLESHEETS/SportRulesComponent.css";
 import NavBarUser from "./NavBarUser";
+import Footer from "./Footer";
 
 const SportRulesComponent = () => {
   const [sportName, setSportName] = useState("");
@@ -195,6 +196,7 @@ const SportRulesComponent = () => {
           </div>
         )}
       </div>
+      <Footer/>
     </div>
   );
 };

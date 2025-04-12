@@ -4,6 +4,7 @@ import NavBar from './NavBar';
 import { useNavigate } from 'react-router-dom';
 import Validation from './SignUpValidation';
 import axios from 'axios';
+import Footer from './Footer';
 
 function SignUp() {
     const [values, setValues] = useState({
@@ -95,6 +96,7 @@ function SignUp() {
                     <p>Already have an account? <a href="/login/player">Log In</a></p>
                 </div>
             </div>
+            <Footer/>
         </div>
     );
 }

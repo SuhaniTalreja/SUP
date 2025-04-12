@@ -3,6 +3,7 @@ import { Instagram, X, Linkedin, Share2 } from "lucide-react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import "./STYLESHEETS/SmartPost.css";
 import NavBarUser from "./NavBarUser";
+import Footer from "./Footer";
 
 const sportsOptions = [
   "Badminton",
@@ -207,6 +208,7 @@ const SmartPost = () => {
         </div>
       </div>
     </div>
+    <Footer/>
     </div>
   );
 };

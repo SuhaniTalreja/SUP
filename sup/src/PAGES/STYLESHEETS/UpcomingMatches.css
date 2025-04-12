@@ -89,19 +89,23 @@
 }
 
 /* Responsive tweaks */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .carousel {
     height: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* for smooth iOS scroll */
   }
 
   .carousel-track {
     animation: none;
-    flex-wrap: wrap;
-    justify-content: center;
+    flex-wrap: nowrap; /* prevent wrapping for horizontal scroll */
+    justify-content: flex-start;
+    gap: 16px;
   }
 
   .match-card {
-    width: 90%;
-    margin-bottom: 20px;
+    flex: 0 0 auto; /* maintain fixed width for horizontal scroll */
+    width: 60%;
+    margin: 10px 0;
   }
 }

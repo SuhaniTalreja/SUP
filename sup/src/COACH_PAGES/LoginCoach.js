@@ -4,6 +4,7 @@ import NavBar from '../PAGES/NavBar';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Validation from './LoginValidation';
+import Footer from '../PAGES/Footer';
 
 function LoginCoach() {
   const [values, setValues] = useState({
@@ -93,6 +94,7 @@ function LoginCoach() {
           <p>Don't have an account? <a href="/sign-up-coach">Sign Up</a></p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

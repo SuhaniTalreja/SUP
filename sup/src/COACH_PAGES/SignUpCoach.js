@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./STYLESHEETS/SignUpCoach.css";
 import { AlertTriangle } from "lucide-react";
 import NavBar from "../PAGES/NavBar";
+import Footer from "../PAGES/Footer";
 
 function SignUpCoach() {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -52,22 +53,6 @@ function SignUpCoach() {
     setLoading(false);
   };
 
-  // const handleFormSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const response = await fetch("http://localhost:3001/sign-up/coach", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify(formData),
-  //   });
-  //   const result = await response.json();
-  //   if (response.ok) {
-  //     alert("Coach added successfully!");
-  //   } else {
-  //     alert(result.error || "Error adding coach");
-  //   }
-  // };
 
   return (
     <div>
@@ -132,6 +117,7 @@ function SignUpCoach() {
           Back to <a href="/login/coach">Login</a>
         </p>
       </div>
+      <Footer/>
     </div>
   );
 }

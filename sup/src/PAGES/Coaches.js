@@ -3,6 +3,7 @@ import NavBarUser from './NavBarUser';
 import './STYLESHEETS/Coaches.css';
 import coaches from './CoachesInfo.json';
 import authorities from './AuthoritiesInfo.json';
+import Footer from './Footer';
 
 function Coaches() {
   return (
@@ -59,6 +60,7 @@ function Coaches() {
           </div>
         </section>
       </div>
+      <Footer/>
     </div>
   );
 }

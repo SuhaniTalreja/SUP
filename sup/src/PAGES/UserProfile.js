@@ -3,6 +3,7 @@ import NavBarUser from "./NavBarUser";
 import { Button, CircularProgress, Alert } from "@mui/material";
 import axios from "axios";
 import "./STYLESHEETS/UserProfile.css";
+import Footer from "./Footer";
 
 function UserProfile() {
   const [userData, setUserData] = useState({
@@ -199,6 +200,7 @@ useEffect(() => {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 }
