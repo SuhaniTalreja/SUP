@@ -58,7 +58,8 @@ h2{
 }
 
 button:hover {
-    background-color: #e87900 !important;
+    background-color: #f39d41 !important;
+    color:white !important; 
 }
 
 .text {

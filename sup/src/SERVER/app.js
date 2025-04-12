@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 // ✅ Connection Pooling
 const pool = mysql.createPool({
-  host: "10.51.204.46",
+  host: "10.52.234.170",
   port: 3306,
   user: "root",
   password: "suhanimahi",
@@ -429,7 +429,7 @@ app.post("/register-match", (req, res) => {
 });
 
 // FETCH ALL MATCHES
-app.get("/update-match",isCoach, (req, res) => {
+app.get("/update-match", (req, res) => {
   const sql = "SELECT * FROM matches";
   pool.query(sql, (err, result) => {
     if (err) {

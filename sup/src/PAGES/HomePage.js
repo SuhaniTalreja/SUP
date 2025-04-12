@@ -80,8 +80,7 @@ function Home() {
         {/* Upcoming Matches Section */}
         <UpcomingMatches />
 
-        
-
+      
         {/* Footer Section */}
         <Footer />
     </div>
